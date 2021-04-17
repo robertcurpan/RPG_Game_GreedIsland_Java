@@ -16,6 +16,8 @@ public class KeyManager implements KeyListener {
     public boolean down;        // Flag pentru tasta "jos" apasata.
     public boolean left;        // Flag pentru tasta "stanga" apasata.
     public boolean right;       // Flag pentru tasta "dreapta" apasata.
+    public int lastKeyPressed;  // Ultima tasta apasata
+    public int lastKeyReleased; // Ultima tasta eliberata
 
     /*! \fn public KeyManager()
         \brief Constructorul clasei.
@@ -41,6 +43,7 @@ public class KeyManager implements KeyListener {
     public void keyPressed(KeyEvent e){
             /// Se retine in vectorul de flaguri ca o tasta a fost apasata.
         keys[e.getKeyCode()] = true;
+        lastKeyPressed = e.getKeyCode();
     }
 
     /*! \fn public void keyReleased(KeyEvent e)
@@ -52,6 +55,7 @@ public class KeyManager implements KeyListener {
     public void keyReleased(KeyEvent e){
             /// Se retine in vectorul de flaguri ca o tasta a fost eliberata.
         keys[e.getKeyCode()] = false;
+        lastKeyReleased = e.getKeyCode();
     }
 
     /*! \fn public void keyTyped(KeyEvent e)

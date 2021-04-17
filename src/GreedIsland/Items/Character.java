@@ -1,5 +1,6 @@
 package GreedIsland.Items;
 
+import GreedIsland.Animations.Animation;
 import GreedIsland.RefLinks;
 
 /*! \class public abstract class Character extends Item
@@ -11,7 +12,7 @@ import GreedIsland.RefLinks;
 public abstract class Character extends Item
 {
     public static final int DEFAULT_LIFE            = 10;   /*!< Valoarea implicita a vietii unui caracter.*/
-    public static final float DEFAULT_SPEED         = 3.0f; /*!< Viteza implicita a unu caracter.*/
+    public static final float DEFAULT_SPEED         = 2.5f; /*!< Viteza implicita a unu caracter.*/
     public static final int DEFAULT_CREATURE_WIDTH  = 64;   /*!< Latimea implicita a imaginii caracterului.*/
     public static final int DEFAULT_CREATURE_HEIGHT = 64;   /*!< Inaltimea implicita a imaginii caracterului.*/
 
@@ -19,6 +20,8 @@ public abstract class Character extends Item
     protected float speed;  /*!< Retine viteza de deplasare caracterului.*/
     protected float xMove;  /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa X / frame.*/
     protected float yMove;  /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa Y / frame.*/
+
+    protected Animation animation;  // acest obiect va fi instantiat in caracterele concrete pt ca acestea sa poata apela metoda playAnimation() specifica lor
 
  // ############################################################################################################# //
 

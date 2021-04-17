@@ -1,10 +1,13 @@
 package GreedIsland.Items;
 
+import GreedIsland.Animations.AnimationList;
+import GreedIsland.Animations.HeroAnimation;
 import GreedIsland.Graphics.Assets;
 import GreedIsland.Input.KeyManager;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 /*! \class public class Hero extends Character
@@ -46,6 +49,8 @@ public class Hero extends Character
         attackBounds.y = 0;
         attackBounds.width = 64;
         attackBounds.height = 64;
+
+        animation = new HeroAnimation();
     }
 
     /*! \fn public void Update()
@@ -58,23 +63,10 @@ public class Hero extends Character
         GetInput();
             /// Actualizeaza  pozitia
         Move();
-            /// Actualizeaza imaginea
-        if(refLink.GetKeyManager().left == true)
-        {
-            image = Assets.heroLeft;
-        }
-        if(refLink.GetKeyManager().right == true)
-        {
-            image = Assets.heroRight;
-        }
-        if(refLink.GetKeyManager().up == true)
-        {
-            image = Assets.heroUp;
-        }
-        if(refLink.GetKeyManager().down == true)
-        {
-            image = Assets.heroDown;
-        }
+            /// Actualizeaza id-ul animatiei pe care urmeaza sa o "desenam" pe ecran
+        animation.setAnimID(setAnimationID());
+            /// Actualizeaza imaginile corespunzatoare animatiilor
+        this.image = animation.playAnimation();
     }
 
     /*! \fn private void GetInput()
@@ -136,6 +128,44 @@ public class Hero extends Character
             yMove = speed;
             return;
         }
+    }
+
+    /*! \fn public int setAnimationID()
+        \brief Seteaza id-ul animatiei (pt a putea fi selectata animatia corecta) in functie de apasarea/eliberarea tastelor pe/de pe tastatura
+     */
+    public int setAnimationID()
+    {
+        int animID = 0;
+
+        if(refLink.GetKeyManager().left == true)
+        {
+            animID = AnimationList.walkLeft.ordinal();
+        }
+        if(refLink.GetKeyManager().right == true)
+        {
+            animID = AnimationList.walkRight.ordinal();
+        }
+        if(refLink.GetKeyManager().up == true)
+        {
+            animID = AnimationList.walkUp.ordinal();
+        }
+        if(refLink.GetKeyManager().down == true)
+        {
+            animID = AnimationList.walkDown.ordinal();
+        }
+        if(GetXMove() == 0 && GetYMove() == 0) // daca eroul e stationat, trebuie sa-i atribuim o imagine idle corespunzatoare directiei in care s-a oprit
+        {
+            // trebuie sa aflam care este ultima tasta eliberata (released) pt a sti care imagine idle trebuie sa o atribuim eroului.
+            switch(refLink.GetKeyManager().lastKeyReleased)
+            {
+                case KeyEvent.VK_W: { animID = AnimationList.idleUp.ordinal(); break; }
+                case KeyEvent.VK_A: { animID = AnimationList.idleLeft.ordinal(); break; }
+                case KeyEvent.VK_S: { animID = AnimationList.idleDown.ordinal(); break; }
+                case KeyEvent.VK_D: { animID = AnimationList.idleRight.ordinal(); break; }
+                default: break;
+            }
+        }
+        return animID;
     }
 
     /*! \fn public void Draw(Graphics g)
