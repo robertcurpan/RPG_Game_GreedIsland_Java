@@ -52,6 +52,7 @@ public class Assets {
     public static BufferedImage torch;
     public static BufferedImage windowClosed;
     public static BufferedImage windowOpened;
+    public static BufferedImage chest;
 
  // ################################################################################################## //
 
@@ -111,5 +112,6 @@ public class Assets {
         torch = sheetMap1.crop(6,16);
         windowClosed = sheetMap1.crop(8,0);
         windowOpened = sheetMap1.crop(7,0);
+        chest = sheetMap1.crop(7,1);
     }
 }

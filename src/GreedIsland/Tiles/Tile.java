@@ -61,8 +61,8 @@ public class Tile {
     public static final int TILE_HEIGHT = 32;   // Inaltimea unei dale in Sprite Sheet
 
         /// Adaugam acest camp deoarece "vederea" jocului nu este "complet" de sus. De exemplu, o coliziune intre capul eroului
-        /// si radacina unui copac nu ar fi realista. Adaugam acest camp pt a corecta astfel de probleme si a face coliziunile
-        /// sa para mai realistice.  (vom schimba parametrii acestui Rectangle in clasele derivate (tile-uri concrete).
+        /// si radacina unui copac nu ar fi realista. Adaugam acest camp pt a corecta astfel de probleme.
+        /// (vom schimba parametrii acestui Rectangle in clasele derivate (tile-uri concrete)).
     public Rectangle tileBounds;
 
     protected BufferedImage img;        // Imaginea aferenta tipului de dala.

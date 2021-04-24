@@ -78,8 +78,8 @@ public class Hero extends Character
     {
             /// Verifica daca a fost apasata o tasta
         GetInput();
-            /// Daca nu exista coliziuni cu tile-uri, putem sa updatam pozitia si animatia caracterului
-        if(!WillCollideWithTiles())
+            /// Daca nu exista coliziuni cu tile-uri si nici cu iteme putem sa updatam pozitia si animatia caracterului
+        if(!WillCollideWithTiles() && !WillCollideWithItems())
         {
             /// Actualizeaza  pozitia
             Move();
@@ -88,6 +88,7 @@ public class Hero extends Character
             /// Actualizeaza imaginile corespunzatoare animatiilor
             this.image = animation.playAnimation();
        }
+        DoAction();
     }
 
     /*! \fn private void GetInput()
@@ -186,6 +187,36 @@ public class Hero extends Character
             }
                 
         return false;
+    }
+
+    /*! \fn public boolean WillCollideWithItems()
+        \brief Verificam daca exista coliziuni intre erou si obiectele de tip Item. Vom folosi harta din RefLinks
+     */
+    public boolean WillCollideWithItems()
+    {
+        for(Item i : refLink.GetMap().getMapPopulation().getItems())
+        {
+            if(Collision.CollisionDetection(nextPos, new Rectangle((int)i.GetX() + i.bounds.x, (int)i.GetY() + i.bounds.y, i.bounds.width, i.bounds.height)))
+                return true;
+        }
+        return false;
+    }
+
+    /*! \fn public void DoAction()
+        \brief Verificam apasarea unei taste in apropierea unui Item. In cazul in care s-a intamplat acest lucru, executam DoAction()
+                pt item-ul respectiv. Fiecare tip de Item concret isi defineste propria actiune.
+     */
+    @Override
+    public void DoAction()
+    {
+        for(Item i : refLink.GetMap().getMapPopulation().getItems())
+        {
+            if(refLink.GetKeyManager().e && Collision.CollisionDetection(nextPos, new Rectangle((int)i.GetX() + i.bounds.x, (int)i.GetY() + i.bounds.y, i.bounds.width, i.bounds.height)))
+            {
+                i.DoAction();
+                return;
+            }
+        }
     }
 
     /*! \fn public int setAnimationID()

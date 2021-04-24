@@ -51,6 +51,8 @@ public abstract class Item
     public abstract void Update();
         ///Metoda abstracta destinata desenarii starii curente
     public abstract void Draw(Graphics g);
+        ///Metoda abstracta destinata executarii unei actiuni atunci cand apasam tasta E langa un Item concret
+    public abstract void DoAction();
 
     /*! \fn public float GetX()
         \brief Returneaza coordonata pe axa X.

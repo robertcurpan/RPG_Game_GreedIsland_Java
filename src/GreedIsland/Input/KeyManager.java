@@ -16,6 +16,7 @@ public class KeyManager implements KeyListener {
     public boolean down;        // Flag pentru tasta "jos" apasata.
     public boolean left;        // Flag pentru tasta "stanga" apasata.
     public boolean right;       // Flag pentru tasta "dreapta" apasata.
+    public boolean e;           // Flag pentru apasarea tastei "E"
     public int lastKeyPressed;  // Ultima tasta apasata
     public int lastKeyReleased; // Ultima tasta eliberata
 
@@ -32,6 +33,7 @@ public class KeyManager implements KeyListener {
         down    = keys[KeyEvent.VK_S];
         left    = keys[KeyEvent.VK_A];
         right   = keys[KeyEvent.VK_D];
+        e       = keys[KeyEvent.VK_E];
     }
 
     /*! \fn public void keyPressed(KeyEvent e)

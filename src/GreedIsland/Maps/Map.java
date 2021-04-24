@@ -15,6 +15,8 @@ public class Map {
     private int[][] tilesBackLayer;     // Referinta catre o matrice cu codurile dalelor ce vor construi layer-ul de dedesubt al mapei
     private int[][] tilesFrontLayer;    // Referinta catre o matrice cu codurile dalelor ce vor construi layer-ul de deasupra al mapei
 
+    private MapPopulation mapPopulation;// mapPopulation va contine toate elementele cu care putem interactiona intr-o anumita scena a hartii (inamici, items, usi etc.)
+
  // ################################################################################################################ //
 
     /*! \fn public Map(RefLinks refLink)
@@ -41,7 +43,8 @@ public class Map {
 
         \param g Contextul grafic in care se realizeaza desenarea.
      */
-    public void Draw(Graphics g){
+    public void Draw(Graphics g)
+    {
             /// Se parcurge matricea de dale (codurile aferente) si se deseneaza harta respectiva
         for(int y = 0; y < refLink.GetGame().GetHeight()/Tile.TILE_HEIGHT; y++)
         {
@@ -68,6 +71,9 @@ public class Map {
                 }
             }
         }
+
+            /// Afisam itemele corespunzatoare hartii curente
+        mapPopulation.drawItems(g);
     }
 
     /*! \fn public Tile GetTileBackLayer(int x, int y)
@@ -124,6 +130,9 @@ public class Map {
                 tilesFrontLayer[x][y] = Map1CabinSceneFrontLayer(y,x);
             }
         }
+
+            /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
+        mapPopulation = Map1Scene1Population.getMap1Scene1Pop(refLink);
     }
 
     /*! \fn public int[][] GetFrontLayerMap()
@@ -140,6 +149,14 @@ public class Map {
     public int[][] GetBackLayerMap()
     {
         return tilesBackLayer;
+    }
+
+    /*! \fn public MapPopulation getMapPopulation()
+        \brief Returnam mapPopulation
+     */
+    public MapPopulation getMapPopulation()
+    {
+        return mapPopulation;
     }
 
     /*! \fn private int Map1CabinScene(int x ,int y)
