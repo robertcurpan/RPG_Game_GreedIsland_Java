@@ -2,6 +2,7 @@ package GreedIsland.Items;
 
 import GreedIsland.Animations.AnimationList;
 import GreedIsland.Animations.HeroAnimation;
+import GreedIsland.Collision.Collision;
 import GreedIsland.Graphics.Assets;
 import GreedIsland.Input.KeyManager;
 import GreedIsland.RefLinks;
@@ -21,6 +22,7 @@ import java.awt.image.BufferedImage;
  */
 public class Hero extends Character
 {
+    private static Hero heroInstance;   // Vom face aceasta clasa sa fie Singleton
     private BufferedImage image;    /*!< Referinta catre imaginea curenta a eroului.*/
 
  // ################################################################################################# //
@@ -32,7 +34,7 @@ public class Hero extends Character
         \param x Pozitia initiala pe axa X a eroului.
         \param y Pozitia initiala pe axa Y a eroului.
      */
-    public Hero(RefLinks refLink, float x, float y)
+    private Hero(RefLinks refLink, float x, float y)
     {
             /// Apel al constructorului clasei de baza
         super(refLink, x, y, Character.DEFAULT_CREATURE_WIDTH, Character.DEFAULT_CREATURE_HEIGHT);
@@ -40,10 +42,10 @@ public class Hero extends Character
         image = Assets.heroRight;
 
             /// Stabileste pozitia relativa si dimensiunea dreptunghiului de coliziune in starea implicita (normala)
-        normalBounds.x = 0;
-        normalBounds.y = 0;
-        normalBounds.width = 64;
-        normalBounds.height = 64;
+        normalBounds.x = 8;
+        normalBounds.y = 8;
+        normalBounds.width = 48;
+        normalBounds.height = 48;
             /// Stabileste pozitia relativa si dimensiunea dreptunghiului de coliziune in starea de atac
         attackBounds.x = 0;
         attackBounds.y = 0;
@@ -51,6 +53,21 @@ public class Hero extends Character
         attackBounds.height = 64;
 
         animation = new HeroAnimation();
+
+        nextPos = new Rectangle(0, 0, normalBounds.width, normalBounds.height);
+    }
+
+    /*! \fn public static Hero getHeroInstance()
+        \brief Vom returna instanta UNICA a eroului.
+     */
+    public static Hero getHeroInstance(RefLinks refLink, float x, float y)
+    {
+        if(heroInstance == null)
+        {
+            heroInstance = new Hero(refLink, x, y);
+        }
+
+        return heroInstance;
     }
 
     /*! \fn public void Update()
@@ -61,12 +78,16 @@ public class Hero extends Character
     {
             /// Verifica daca a fost apasata o tasta
         GetInput();
+            /// Daca nu exista coliziuni cu tile-uri, putem sa updatam pozitia si animatia caracterului
+        if(!WillCollideWithTiles())
+        {
             /// Actualizeaza  pozitia
-        Move();
+            Move();
             /// Actualizeaza id-ul animatiei pe care urmeaza sa o "desenam" pe ecran
-        animation.setAnimID(setAnimationID());
+            animation.setAnimID(setAnimationID());
             /// Actualizeaza imaginile corespunzatoare animatiilor
-        this.image = animation.playAnimation();
+            this.image = animation.playAnimation();
+       }
     }
 
     /*! \fn private void GetInput()
@@ -84,50 +105,87 @@ public class Hero extends Character
         {
             xMove = (float) (-speed / Math.sqrt(2));
             yMove = (float) (-speed / Math.sqrt(2));
+            nextPos.x = (int)(x + xMove + bounds.x); //Adaugam bounds.x pt ca vrem sa aflam pozitia viitoare a dreptunghiului de coliziune,
+            nextPos.y = (int)(y + yMove + bounds.y); //nu a imaginii eroului
             return;
         }
         if(km.up && km.right)
         {
             xMove = (float) (speed / Math.sqrt(2));
             yMove = (float) (-speed / Math.sqrt(2));
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
         if(km.down && km.left)
         {
             xMove = (float) (-speed / Math.sqrt(2));
             yMove = (float) (speed / Math.sqrt(2));
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
         if(km.down && km.right)
         {
             xMove = (float) (speed / Math.sqrt(2));
             yMove = (float) (speed / Math.sqrt(2));
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
         if(km.left)
         {
             xMove = -speed;
             yMove = 0;
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
         if(km.right)
         {
             xMove = speed;
             yMove = 0;
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
         if(km.up)
         {
             xMove = 0;
             yMove = -speed;
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
         if(km.down)
         {
             xMove = 0;
             yMove = speed;
+            nextPos.x = (int)(x + xMove + bounds.x);
+            nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
+    }
+
+    /*! \fn public boolean WillCollideWithTiles()
+        \brief Verificam daca exista coliziuni intre erou si elementele "solide" ale hartii. Vom folosi harta din RefLinks
+     */
+    public boolean WillCollideWithTiles()
+    {
+        int[][] frontLayerMap = refLink.GetMap().GetFrontLayerMap();
+        for(int i=0; i<frontLayerMap.length; i++)
+            for(int j=0; j<frontLayerMap[i].length; j++)
+            {
+                // Verificam coliziunea intre urmatoarea pozitie a dreptunghiului de coliziune al eroului si dreptunghiul de coliziune al tile-urilor.
+                if(frontLayerMap[i][j] != 0 && refLink.GetMap().GetTileFrontLayer(i,j).IsSolid() &&
+                        Collision.CollisionDetection(nextPos, new Rectangle(i*32 + refLink.GetMap().GetTileFrontLayer(i,j).tileBounds.x, j*32 + refLink.GetMap().GetTileFrontLayer(i,j).tileBounds.y,
+                                refLink.GetMap().GetTileFrontLayer(i,j).tileBounds.width, refLink.GetMap().GetTileFrontLayer(i,j).tileBounds.height)))
+                {
+                    return true;
+                }
+            }
+                
+        return false;
     }
 
     /*! \fn public int setAnimationID()
@@ -135,24 +193,8 @@ public class Hero extends Character
      */
     public int setAnimationID()
     {
-        int animID = 0;
+        int animID = 5; // implicit, la pornirea jocului, "animatia" selectata va fi idle-down.
 
-        if(refLink.GetKeyManager().left == true)
-        {
-            animID = AnimationList.walkLeft.ordinal();
-        }
-        if(refLink.GetKeyManager().right == true)
-        {
-            animID = AnimationList.walkRight.ordinal();
-        }
-        if(refLink.GetKeyManager().up == true)
-        {
-            animID = AnimationList.walkUp.ordinal();
-        }
-        if(refLink.GetKeyManager().down == true)
-        {
-            animID = AnimationList.walkDown.ordinal();
-        }
         if(GetXMove() == 0 && GetYMove() == 0) // daca eroul e stationat, trebuie sa-i atribuim o imagine idle corespunzatoare directiei in care s-a oprit
         {
             // trebuie sa aflam care este ultima tasta eliberata (released) pt a sti care imagine idle trebuie sa o atribuim eroului.
@@ -164,6 +206,22 @@ public class Hero extends Character
                 case KeyEvent.VK_D: { animID = AnimationList.idleRight.ordinal(); break; }
                 default: break;
             }
+        }
+        else
+        {
+            if (refLink.GetKeyManager().left == true) {
+                animID = AnimationList.walkLeft.ordinal();
+            }
+            if (refLink.GetKeyManager().right == true) {
+                animID = AnimationList.walkRight.ordinal();
+            }
+            if (refLink.GetKeyManager().up == true) {
+                animID = AnimationList.walkUp.ordinal();
+            }
+            if (refLink.GetKeyManager().down == true) {
+                animID = AnimationList.walkDown.ordinal();
+            }
+
         }
         return animID;
     }

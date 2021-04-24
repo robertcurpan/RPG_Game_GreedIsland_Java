@@ -9,10 +9,12 @@ import java.awt.image.BufferedImage;
 
 public class HeroAnimation extends Animation
 {
+    private int imgPozX, imgPozY;
+
     public HeroAnimation()
     {
         characterSheet = new SpriteSheetCharacters(ImageLoader.LoadImage("/textures/Characters_sprites.png"));
-        setAnimSpeed((1.5 * Math.pow(10,8)));    // 2 * 10^8 nanosecunde = 200 milisecunde (animatia va schimba imaginea la fiecare 1/5 secunde)
+        setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
     }
 
     /*! \fn public BufferedImage playAnimation()
@@ -28,8 +30,8 @@ public class HeroAnimation extends Animation
         {
             // Animatia de mers la dreapta
             setNrFrames(9);
-            int imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la dreapta
-            int imgPozY = 11;   // frame-urile pt animatia de mers la dreapta se afla pe linia 11
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la dreapta
+            imgPozY = 11;   // frame-urile pt animatia de mers la dreapta se afla pe linia 11
             image = characterSheet.crop(imgPozX, imgPozY);
         }
 
@@ -37,8 +39,8 @@ public class HeroAnimation extends Animation
         {
             // Animatia de mers la stanga
             setNrFrames(9);
-            int imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la stanga
-            int imgPozY = 9;   // frame-urile pt animatia de mers la stanga se afla pe linia 9
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la stanga
+            imgPozY = 9;   // frame-urile pt animatia de mers la stanga se afla pe linia 9
             image = characterSheet.crop(imgPozX, imgPozY);
         }
 
@@ -46,8 +48,8 @@ public class HeroAnimation extends Animation
         {
             // Animatia de mers la in sus
             setNrFrames(9);
-            int imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in sus
-            int imgPozY = 8;   // frame-urile pt animatia de mers in sus se afla pe linia 8
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in sus
+            imgPozY = 8;   // frame-urile pt animatia de mers in sus se afla pe linia 8
             image = characterSheet.crop(imgPozX, imgPozY);
         }
 
@@ -55,8 +57,8 @@ public class HeroAnimation extends Animation
         {
             // Animatia de mers in jos
             setNrFrames(9);
-            int imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in jos
-            int imgPozY = 10;   // frame-urile pt animatia de mers in jos se afla pe linia 10
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in jos
+            imgPozY = 10;   // frame-urile pt animatia de mers in jos se afla pe linia 10
             image = characterSheet.crop(imgPozX, imgPozY);
         }
 

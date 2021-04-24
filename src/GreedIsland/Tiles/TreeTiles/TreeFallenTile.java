@@ -14,8 +14,11 @@ public class TreeFallenTile extends Tile {
         \param id Id-ul dalei util in desenarea hartii.
      */
     public TreeFallenTile(int id){
-        /// Apel al constructorului clasei de baza
+            /// Apel al constructorului clasei de baza
         super(Assets.treeFallen, id);
+            /// Setare bounds
+        tileBounds.x = 8; tileBounds.y = 0;
+        tileBounds.width = 16; tileBounds.height = 2;
     }
 
     /*! \fn public boolean IsSolid()

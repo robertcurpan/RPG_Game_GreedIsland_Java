@@ -25,9 +25,6 @@ public class Tile {
     public static Tile grassTallTile            = new GrassTallTile(3);
     public static Tile fountainTop              = new FountainTopTile(30);
     public static Tile fountainBottom           = new FountainBottomTile(31);
-    public static Tile treeTallTile1            = new TreeTallTile1(32);
-    public static Tile treeTallTile2            = new TreeTallTile2(33);
-    public static Tile treeTallTile3            = new TreeTallTile3(34);
     public static Tile treeRoundTile1           = new TreeRoundTile1(35);
     public static Tile treeRoundTile2           = new TreeRoundTile2(36);
     public static Tile treeRoundTile3           = new TreeRoundTile3(37);
@@ -63,6 +60,11 @@ public class Tile {
     public static final int TILE_WIDTH = 32;    // Latimea unei dale in Sprite Sheet
     public static final int TILE_HEIGHT = 32;   // Inaltimea unei dale in Sprite Sheet
 
+        /// Adaugam acest camp deoarece "vederea" jocului nu este "complet" de sus. De exemplu, o coliziune intre capul eroului
+        /// si radacina unui copac nu ar fi realista. Adaugam acest camp pt a corecta astfel de probleme si a face coliziunile
+        /// sa para mai realistice.  (vom schimba parametrii acestui Rectangle in clasele derivate (tile-uri concrete).
+    public Rectangle tileBounds;
+
     protected BufferedImage img;        // Imaginea aferenta tipului de dala.
     protected final int id;             // Id-ul unic aferent tipului de dala.
 
@@ -77,6 +79,7 @@ public class Tile {
     public Tile(BufferedImage image, int idd){
         img = image;
         id = idd;
+        tileBounds = new Rectangle(0,0,0,0);
 
         tiles[id] = this;
     }

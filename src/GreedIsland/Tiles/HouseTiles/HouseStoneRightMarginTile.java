@@ -8,6 +8,9 @@ public class HouseStoneRightMarginTile extends Tile
     public HouseStoneRightMarginTile(int id)
     {
         super(Assets.houseStoneRightMargin, id);
+        /// Setare bounds
+        tileBounds.x = 0; tileBounds.y = 0;
+        tileBounds.width = 24; tileBounds.height = 1;
     }
 
     @Override

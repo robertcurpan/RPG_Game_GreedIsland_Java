@@ -11,5 +11,5 @@ public class RiverNtoETile extends Tile
     }
 
     @Override
-    public boolean IsSolid() { return true; }
+    public boolean IsSolid() { return false; }
 }

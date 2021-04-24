@@ -17,6 +17,9 @@ public class TreeCutTile extends Tile {
     public TreeCutTile(int id){
         /// Apel al constructorului clasei de baza
         super(Assets.treeCut, id);
+        /// Setare bounds
+        tileBounds.x = 16; tileBounds.y = 0;
+        tileBounds.width = 4; tileBounds.height = 1;
     }
 
     /*! \fn public boolean IsSolid()

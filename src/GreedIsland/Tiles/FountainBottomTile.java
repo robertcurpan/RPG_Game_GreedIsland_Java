@@ -15,6 +15,9 @@ public class FountainBottomTile extends Tile {
     public FountainBottomTile(int id){
         /// Apel al constructorului clasei de baza
         super(Assets.fountainBottom, id);
+        /// Setare bounds
+        tileBounds.x = 4; tileBounds.y = 0;
+        tileBounds.width = 24; tileBounds.height = 1;
     }
 
     /*! \fn public boolean IsSolid()

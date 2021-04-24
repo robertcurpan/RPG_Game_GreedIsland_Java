@@ -3,6 +3,8 @@ package GreedIsland.Items;
 import GreedIsland.Animations.Animation;
 import GreedIsland.RefLinks;
 
+import java.awt.*;
+
 /*! \class public abstract class Character extends Item
     \brief Defineste notiunea abstracta de caracter/individ/fiinta din joc.
 
@@ -20,6 +22,9 @@ public abstract class Character extends Item
     protected float speed;  /*!< Retine viteza de deplasare caracterului.*/
     protected float xMove;  /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa X / frame.*/
     protected float yMove;  /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa Y / frame.*/
+
+    protected Rectangle nextPos; /*!< Retine pozitia viitoare a unui caracter. Punem acest camp aici (si nu doar in Hero) deoarece
+                                    s-ar putea sa mai avem nevoie de el si in cazul inamicilor */
 
     protected Animation animation;  // acest obiect va fi instantiat in caracterele concrete pt ca acestea sa poata apela metoda playAnimation() specifica lor
 

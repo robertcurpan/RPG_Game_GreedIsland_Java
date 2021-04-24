@@ -8,6 +8,9 @@ public class DoorOpenedTile extends Tile
     public DoorOpenedTile(int id)
     {
         super(Assets.doorOpened, id);
+        /// Setare bounds
+        tileBounds.x = 0; tileBounds.y = 0;
+        tileBounds.width = 32; tileBounds.height = 1;
     }
 
     @Override

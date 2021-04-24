@@ -28,8 +28,8 @@ public class PlayState extends State
         map = new Map(refLink);
             /// Referinta catre harta construita este setata si in obiectul shortcut pt a fi accesibila si in alte clase ale programului
         refLink.SetMap(map);
-            /// Construieste eroul
-        hero = new Hero(refLink, 100, 100);
+            /// Construieste eroul (folosing o functie specifica Singleton)
+        hero = Hero.getHeroInstance(refLink, 100, 100);
     }
 
     /*! \fn public void Update()

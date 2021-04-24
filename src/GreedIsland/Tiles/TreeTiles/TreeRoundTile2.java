@@ -16,6 +16,9 @@ public class TreeRoundTile2 extends Tile {
     public TreeRoundTile2(int id){
         /// Apel al constructorului clasei de baza
         super(Assets.treeRound2, id);
+        /// Setare bounds
+        tileBounds.x = 16; tileBounds.y = 0;
+        tileBounds.width = 4; tileBounds.height = 24;
     }
 
     /*! \fn public boolean IsSolid()
