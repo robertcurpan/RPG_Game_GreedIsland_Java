@@ -8,6 +8,7 @@ import GreedIsland.Tiles.Tile;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.io.FileNotFoundException;
 
 /*! \class Game
     \brief Clasa principala a intregului proiect. Implementeaza Game - Loop (Update -> Draw)
@@ -98,7 +99,7 @@ public class Game implements Runnable {
         Fereastra jocului va fi construita prin apelul functiei BuildGameWindow();
         Sunt construite elementele grafice (assets): dale, player, elemente active si pasive.
      */
-    private void InitGame(){
+    private void InitGame() throws FileNotFoundException {
             /// Este construita fereastra grafica
         wnd.BuildGameWindow();
             /// Se ataseaza ferestrei managerul de tastatura pt a primi evenimentele furnizate de fereastra
@@ -123,7 +124,11 @@ public class Game implements Runnable {
      */
     public void run(){
             /// Initializeaza obiectul game
-        InitGame();
+        try {
+            InitGame();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         long oldTime = System.nanoTime();   // Retine timpul in nanosecunde aferent frame-ului anterior
         long currentTime;                   // Retine timpul in nanosecunde aferent frame-ului curent
 

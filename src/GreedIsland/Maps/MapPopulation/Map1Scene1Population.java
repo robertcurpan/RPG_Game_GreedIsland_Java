@@ -1,7 +1,6 @@
-package GreedIsland.Maps;
+package GreedIsland.Maps.MapPopulation;
 
 import GreedIsland.Items.ConcreteItems.Chest;
-import GreedIsland.Items.Hero;
 import GreedIsland.Items.Item;
 import GreedIsland.RefLinks;
 

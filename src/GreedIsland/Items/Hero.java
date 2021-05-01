@@ -173,7 +173,7 @@ public class Hero extends Character
      */
     public boolean WillCollideWithTiles()
     {
-        int[][] frontLayerMap = refLink.GetMap().GetFrontLayerMap();
+        int[][] frontLayerMap = refLink.GetMap().getMapTiles().getFrontLayer();
         for(int i=0; i<frontLayerMap.length; i++)
             for(int j=0; j<frontLayerMap[i].length; j++)
             {

@@ -1,4 +1,4 @@
-package GreedIsland.Maps;
+package GreedIsland.Maps.MapPopulation;
 
 import GreedIsland.Items.Item;
 import GreedIsland.RefLinks;

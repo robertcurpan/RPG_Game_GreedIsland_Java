@@ -5,6 +5,7 @@ import GreedIsland.Maps.Map;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 /*! \class public class PlayState extends State
     \brief Implementeaza/controleaza jocul.
@@ -21,7 +22,7 @@ public class PlayState extends State
 
         \param refLink O referinta catre un obiect "shortcut", obiect ce contine o serie de referinte utile in program.
      */
-    public PlayState(RefLinks refLink){
+    public PlayState(RefLinks refLink) throws FileNotFoundException {
             /// Apel al constructorului clasei de baza
         super(refLink);
             /// Construieste harta jocului

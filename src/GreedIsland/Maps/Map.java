@@ -1,21 +1,23 @@
 package GreedIsland.Maps;
 
+import GreedIsland.Maps.MapPopulation.Map1Scene1Population;
+import GreedIsland.Maps.MapPopulation.MapPopulation;
+import GreedIsland.Maps.MapTiles.BaseAbstractMap;
 import GreedIsland.RefLinks;
 import GreedIsland.Tiles.Tile;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 /*! \class public class Map
     \brief Implementeaza notiunea de harta a jocului.
  */
 public class Map {
     private RefLinks refLink;           // O referinta catre un obiect "shortcut", obiect ce contine o serie de referinte utile in program
-    private int width;                  // Latimea hartii in numar de dale
-    private int height;                 // Inaltimea hartii in numar de dale
-    private int[][] tilesBackLayer;     // Referinta catre o matrice cu codurile dalelor ce vor construi layer-ul de dedesubt al mapei
-    private int[][] tilesFrontLayer;    // Referinta catre o matrice cu codurile dalelor ce vor construi layer-ul de deasupra al mapei
 
-    private MapPopulation mapPopulation;// mapPopulation va contine toate elementele cu care putem interactiona intr-o anumita scena a hartii (inamici, items, usi etc.)
+    private MapFactory mapFactory;      // fabrica de harti
+    private BaseAbstractMap mapTiles;   // mapTiles va contine tile-urile propriu-zise ale hartii(scenei) curente
+    private MapPopulation mapPopulation;// mapPopulation va contine toate elementele cu care putem interactiona in scena curenta (inamici, items, usi etc.)
 
  // ################################################################################################################ //
 
@@ -24,9 +26,11 @@ public class Map {
 
         \param refLink O referinte catre un obiect "shortcut", obiect ce contine o serie de referinte utile in program.
      */
-    public Map(RefLinks refLink){
+    public Map(RefLinks refLink) throws FileNotFoundException {
             /// Retine referinta "shortcut"
         this.refLink = refLink;
+            /// Instantiem mapFactory
+        mapFactory = new MapFactory();
             /// Incarca harta de start. Functia poate primi ca argument id-ul hartii ce poate fi incarcat.
         LoadWorld();
     }
@@ -45,12 +49,23 @@ public class Map {
      */
     public void Draw(Graphics g)
     {
-            /// Se parcurge matricea de dale (codurile aferente) si se deseneaza harta respectiva
+            /// Afisam tile-urile hartii curente
+        drawTiles(g);
+            /// Afisam itemele corespunzatoare hartii curente
+        mapPopulation.drawItems(g);
+    }
+
+    /*! \fn public void drawTiles(Graphics g)
+        \brief Desenam tile-urile hartii curente
+     */
+    public void drawTiles(Graphics g)
+    {
+        /// Se parcurge matricea de dale (codurile aferente) si se deseneaza harta respectiva
         for(int y = 0; y < refLink.GetGame().GetHeight()/Tile.TILE_HEIGHT; y++)
         {
             for(int x = 0; x < refLink.GetGame().GetWidth()/Tile.TILE_WIDTH; x++)
             {
-                if(tilesBackLayer[x][y] == 0)
+                if(mapTiles.getBackLayer()[x][y] == 0)
                 {
                     // Nu desenam nimic (0 in matricea cu codurile aferente dalelor inseamna ca nu desenam nimic)
                     // Practic, 0 reprezinta spatiul ocupat de o dala mai mare de 32x32
@@ -60,7 +75,7 @@ public class Map {
                     GetTileBackLayer(x,y).Draw(g, (int)x * Tile.TILE_HEIGHT, (int)y * Tile.TILE_WIDTH);
                 }
 
-                if(tilesFrontLayer[x][y] == 0)
+                if(mapTiles.getFrontLayer()[x][y] == 0)
                 {
                     // Nu desenam nimic (0 in matricea cu codurile aferente dalelor inseamna ca nu desenam nimic)
                     // Practic, 0 reprezinta spatiul ocupat de o dala mai mare de 32x32
@@ -71,19 +86,47 @@ public class Map {
                 }
             }
         }
-
-            /// Afisam itemele corespunzatoare hartii curente
-        mapPopulation.drawItems(g);
     }
+
+
+    /*! \fn private void LoadWorld()
+        \brief Functie de incarcare a hartii jocului.
+        Aici se poate genera sau incarca din fisier harta. Momentan este incarcata static.
+     */
+    private void LoadWorld() throws FileNotFoundException
+    {
+            /// Instantiere/returnare mapTiles (cu apel al metodei factory)
+        mapTiles = mapFactory.getMap(11);
+            /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
+        mapPopulation = Map1Scene1Population.getMap1Scene1Pop(refLink);
+    }
+
+
+    /*! \fn public BaseAbstractMap getMapTiles()
+        \brief Returnam mapTiles (a hartii curente)
+     */
+    public BaseAbstractMap getMapTiles()
+    {
+        return mapTiles;
+    }
+
+    /*! \fn public MapPopulation getMapPopulation()
+        \brief Returnam mapPopulation (a hartii curente)
+     */
+    public MapPopulation getMapPopulation()
+    {
+        return mapPopulation;
+    }
+
 
     /*! \fn public Tile GetTileBackLayer(int x, int y)
         \brief Intoarce o referinta catre dala aferenta codului din layer-ul din spate al matricii de dale.
      */
     public Tile GetTileBackLayer(int x, int y){
-        if(x < 0 || y < 0 || x >= width || y >= height)
+        if(x < 0 || y < 0 || x >= mapTiles.width || y >= mapTiles.height)
             return Tile.dirtTile;
 
-        Tile t = Tile.tiles[tilesBackLayer[x][y]];
+        Tile t = Tile.tiles[mapTiles.getBackLayer()[x][y]];
 
         if(t == null)
             return Tile.grassTile;
@@ -95,10 +138,10 @@ public class Map {
         \brief Intoarce o referinta catre dala aferenta codului din layer-ul din fata al matricii de dale.
      */
     public Tile GetTileFrontLayer(int x, int y){
-        if(x < 0 || y < 0 || x >= width || y >= height)
+        if(x < 0 || y < 0 || x >= mapTiles.width || y >= mapTiles.height)
             return Tile.dirtTile;
 
-        Tile t = Tile.tiles[tilesFrontLayer[x][y]];
+        Tile t = Tile.tiles[mapTiles.getFrontLayer()[x][y]];
 
         if(t == null)
             return Tile.grassTile;
@@ -106,117 +149,6 @@ public class Map {
         return t;
     }
 
-    /*! \fn private void LoadWorld()
-        \brief Functie de incarcare a hartii jocului.
-        Aici se poate genera sau incarca din fisier harta. Momentan este incarcata static.
-     */
-    private void LoadWorld(){
-            /// Atentie! Latimea si inaltimea trebuiesc corelate cu dimensiunile ferestrei sau
-            /// se poate implementa notiunea de camera/cadru de vizualizare a hartii.
 
-            /// Se stabileste latimea hartii in numar de dale
-        width = 25;
-            /// Se stabileste inaltimea hartii in numar de dale
-        height = 20;
-            /// Se construieste matricea cu coduri de dale
-        tilesBackLayer = new int[width][height];
-        tilesFrontLayer = new int[width][height];
-            /// Se incarca matricea cu coduri
-        for(int y = 0; y < height; y++)
-        {
-            for(int x = 0; x < width; x++)
-            {
-                tilesBackLayer[x][y] = Map1CabinSceneBackLayer(y,x);
-                tilesFrontLayer[x][y] = Map1CabinSceneFrontLayer(y,x);
-            }
-        }
-
-            /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
-        mapPopulation = Map1Scene1Population.getMap1Scene1Pop(refLink);
-    }
-
-    /*! \fn public int[][] GetFrontLayerMap()
-        \brief Returnam layer-ul de suprafata al hartii pt a-l putea folosi in coliziuni.
-     */
-    public int[][] GetFrontLayerMap()
-    {
-        return tilesFrontLayer;
-    }
-
-    /*! \fn public int[][] GetBackLayerMap()
-        \brief Returnam layer-ul de dedesubt al hartii.
-     */
-    public int[][] GetBackLayerMap()
-    {
-        return tilesBackLayer;
-    }
-
-    /*! \fn public MapPopulation getMapPopulation()
-        \brief Returnam mapPopulation
-     */
-    public MapPopulation getMapPopulation()
-    {
-        return mapPopulation;
-    }
-
-    /*! \fn private int Map1CabinScene(int x ,int y)
-        \brief O harta incarcata static.
-
-        \param x linia pe care se afla codul dalei de interes.
-        \param y coloana pe care se afla codul dalei de interes.
-     */
-    private int Map1CabinSceneBackLayer(int x, int y){
-            /// Definire statica a layer-ului din spate al matricii de coduri de dale.
-        final int map[][] = {
-                {3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3},
-                {3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3},
-                {3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3},
-                {3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3},
-                {2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                {2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-        };
-        return map[x][y];
-    }
-
-    private int Map1CabinSceneFrontLayer(int x, int y){
-            /// Definire statica a layer-ului din fata al matricii de coduri de dale.
-        final int map[][] = {
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0, 0, 0,35,36, 0, 0, 0, 0, 0, 0, 0,43,42,42,42,42,42,44, 0, 0, 0, 0, 0, 0},
-                { 0, 0, 0,37,38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,41, 0, 0, 0,35,36, 0},
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,35,36, 0, 0,41, 0, 0, 0,37,38, 0},
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,37,38, 0, 0,43,42,42,44, 0, 0, 0},
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,41, 0, 0, 0},
-                { 0, 0, 0, 0, 0, 0,35,36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,43,42,42,42},
-                { 0, 0, 0, 0, 0, 0,37,38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0,35,36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0,37,38, 0, 0,50,55, 0, 0,39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0, 0, 0,50,51,52,57,56,55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0, 0,51,52,53,54,59,58,57,56, 0, 0, 0, 0, 0, 0,35,36, 0, 0, 0, 0, 0, 0, 0},
-                { 0, 0,53,54,47,47,47,47,59,58, 0, 0, 0, 0, 0, 0,37,38, 0, 0, 0, 0, 0, 0, 0},
-                {35,36,48,47,62,47,47,62,47,49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {37,38,48,47,47,47,47,47,47,49, 0,35,36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {46, 0,48,63,47,47,47,47,63,49, 0,37,38, 0, 0, 0, 0, 0, 0, 0,30, 0, 0, 0, 0},
-                { 0,46,48,47,47,60,61,47,47,49, 0, 0, 0, 0, 0,40, 0, 0, 0, 0,31,45, 0, 0, 0},
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0, 0,35,36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0, 0,37,38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-        };
-        return map[x][y];
-    }
 }
 
