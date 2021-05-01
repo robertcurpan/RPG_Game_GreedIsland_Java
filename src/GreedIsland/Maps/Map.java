@@ -1,8 +1,10 @@
 package GreedIsland.Maps;
 
+import GreedIsland.Items.Hero;
 import GreedIsland.Maps.MapPopulation.Map1Scene1Population;
 import GreedIsland.Maps.MapPopulation.MapPopulation;
 import GreedIsland.Maps.MapTiles.BaseAbstractMap;
+import GreedIsland.Maps.MapTiles.MapNames;
 import GreedIsland.RefLinks;
 import GreedIsland.Tiles.Tile;
 
@@ -13,11 +15,12 @@ import java.io.FileNotFoundException;
     \brief Implementeaza notiunea de harta a jocului.
  */
 public class Map {
-    private RefLinks refLink;           // O referinta catre un obiect "shortcut", obiect ce contine o serie de referinte utile in program
+    private RefLinks refLink;                           // O referinta catre un obiect "shortcut", obiect ce contine o serie de referinte utile in program
 
-    private MapFactory mapFactory;      // fabrica de harti
-    private BaseAbstractMap mapTiles;   // mapTiles va contine tile-urile propriu-zise ale hartii(scenei) curente
-    private MapPopulation mapPopulation;// mapPopulation va contine toate elementele cu care putem interactiona in scena curenta (inamici, items, usi etc.)
+    private MapFactory mapFactory;                      // fabrica de harti
+    private MapPopulationFactory mapPopulationFactory;  // fabrica de iteme (obiectele cu care putem interactiona pe fiecare harta)
+    private BaseAbstractMap mapTiles;                   // mapTiles va contine tile-urile propriu-zise ale hartii(scenei) curente
+    private MapPopulation mapPopulation;                // mapPopulation va contine toate elementele cu care putem interactiona in scena curenta (inamici?, items, usi etc.)
 
  // ################################################################################################################ //
 
@@ -31,6 +34,8 @@ public class Map {
         this.refLink = refLink;
             /// Instantiem mapFactory
         mapFactory = new MapFactory();
+            /// Instantiem mapPopulationFactory
+        mapPopulationFactory = new MapPopulationFactory();
             /// Incarca harta de start. Functia poate primi ca argument id-ul hartii ce poate fi incarcat.
         LoadWorld();
     }
@@ -96,9 +101,9 @@ public class Map {
     private void LoadWorld() throws FileNotFoundException
     {
             /// Instantiere/returnare mapTiles (cu apel al metodei factory)
-        mapTiles = mapFactory.getMap(11);
+        mapTiles = mapFactory.getMap(MapNames.map1scene1);
             /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
-        mapPopulation = Map1Scene1Population.getMap1Scene1Pop(refLink);
+        mapPopulation = mapPopulationFactory.getMapPopulation(MapNames.map1scene1, refLink);
     }
 
 
@@ -116,6 +121,55 @@ public class Map {
     public MapPopulation getMapPopulation()
     {
         return mapPopulation;
+    }
+
+    /*! \fn public void changeScene()
+        \brief Aici vom realiza tranzitiile catre alte harti (modificarea scenei curente)
+     */
+    public void changeScene() throws FileNotFoundException
+    {
+        // Coliziunea cu un block de dirt este verificata in clasa Hero in functia de coliziune cu Tile-urile.
+        // Aici stabilim daca eroul a iesit de pe harta si, daca da, incarcam scena corespunzatoare
+
+        Hero hero = Hero.getHeroInstance(refLink, 0, 0); //x si y nu se vor lua in considerare deoarece eroul este deja creat
+
+        if(hero.GetX() < -30.0 && mapTiles.getMapW() != MapNames.noMap)     // daca eroul a depasit harta in stanga si exista o harta in acel sens
+        {
+            // Actualizam mapPopulation (sa corespunda noii harti incarcate)
+            mapPopulation = mapPopulationFactory.getMapPopulation(mapTiles.getMapW(), refLink);
+            // Facem tranzitia catre vecinul din stanga (W)
+            mapTiles = mapFactory.getMap(mapTiles.getMapW());
+            // Actualizam si pozitia eroului in noua scena (am venit din dreapta spre stanga, deci il pozitionam aproape de capatul din dreapta al scenei curente)
+            hero.SetX(780); // y-ul ramane acelasi
+        }
+        if(hero.GetX() > 780.0 && mapTiles.getMapE() != MapNames.noMap)
+        {
+            // Actualizam mapPopulation (sa corespunda noii harti incarcate)
+            mapPopulation = mapPopulationFactory.getMapPopulation(mapTiles.getMapE(), refLink);
+            // Facem tranzitia catre vecinul din dreapta (E)
+            mapTiles = mapFactory.getMap(mapTiles.getMapE());
+            // Actualizam si pozitia eroului in noua scena
+            hero.SetX(-20);
+        }
+        if(hero.GetY() < -30.0 && mapTiles.getMapN() != MapNames.noMap)
+        {
+            // Actualizam mapPopulation (sa corespunda noii harti incarcate)
+            mapPopulation = mapPopulationFactory.getMapPopulation(mapTiles.getMapN(), refLink);
+            // Facem tranzitia catre vecinul de deasupra (N)
+            mapTiles = mapFactory.getMap(mapTiles.getMapN());
+            // Actualizam si pozitia eroului in noua scena
+            hero.SetY(620);
+        }
+        if(hero.GetY() > 620.0 && mapTiles.getMapS() != MapNames.noMap)
+        {
+            // Actualizam mapPopulation (sa corespunda noii harti incarcate)
+            mapPopulation = mapPopulationFactory.getMapPopulation(mapTiles.getMapS(), refLink);
+            // Facem tranzitia catre vecinul de dedesubt (S)
+            mapTiles = mapFactory.getMap(mapTiles.getMapS());
+            // Actualizam si pozitia eroului in noua scena
+            hero.SetY(-20);
+        }
+
     }
 
 

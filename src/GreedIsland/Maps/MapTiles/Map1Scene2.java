@@ -6,16 +6,16 @@ import java.util.Scanner;
 
 // FACTORY METHOD 1 //
 
-// clasa ConcreteProduct1 din sablonul Factory
-// Prima mapa concreta (clasa Singleton) -> va fi folosita "metoda Singleton" in cadrul metodei Factory
-public class Map1Scene1 extends BaseAbstractMap
+// clasa ConcreteProduct2 din sablonul Factory
+// A doua mapa concreta (clasa Singleton) -> va fi folosita "metoda Singleton" in cadrul metodei Factory
+public class Map1Scene2 extends BaseAbstractMap
 {
-    private static volatile Map1Scene1 mapInstance;
+    private static volatile Map1Scene2 mapInstance;
 
-    private Map1Scene1() throws FileNotFoundException
+    private Map1Scene2() throws FileNotFoundException
     {
-        Scanner finFront = new Scanner(new FileReader("res/maps/map1scene1frontlayer.txt"));
-        Scanner finBack = new Scanner(new FileReader("res/maps/map1scene1backlayer.txt"));
+        Scanner finFront = new Scanner(new FileReader("res/maps/map1scene2frontlayer.txt"));
+        Scanner finBack = new Scanner(new FileReader("res/maps/map1scene2backlayer.txt"));
 
         // Citim din fisier layerele acestei harti
         frontLayer = new int[width][height];
@@ -34,26 +34,26 @@ public class Map1Scene1 extends BaseAbstractMap
         finFront.close();
 
         // Stabilim id-ul acestei harti
-        mapId = MapNames.map1scene1;
+        mapId = MapNames.map1scene2;
 
         // Stabilim "vecinii" acestei harti (hartile adiacente in care putem merge)
         // Daca un vecin are valoarea 0 inseamna ca nu exista o harta in acea directie.
-        mapW = MapNames.noMap;
+        mapW = MapNames.map1scene1;  // vecinul din stanga al acestei harti este Map1Scene1
         mapN = MapNames.noMap;
-        mapE = MapNames.map1scene2; //In dreapta acestei harti se afla Map1Scene2
+        mapE = MapNames.noMap;
         mapS = MapNames.noMap;
 
     }
 
     // "Metoda Singleton"
-    public static Map1Scene1 getInstance() throws FileNotFoundException
+    public static Map1Scene2 getInstance() throws FileNotFoundException
     {
         if(mapInstance == null)
         {
-            synchronized (Map1Scene1.class)
+            synchronized (Map1Scene2.class)
             {
                 if(mapInstance == null)
-                    mapInstance = new Map1Scene1();
+                    mapInstance = new Map1Scene2();
             }
         }
 

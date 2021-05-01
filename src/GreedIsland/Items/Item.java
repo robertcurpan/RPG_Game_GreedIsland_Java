@@ -3,6 +3,7 @@ package GreedIsland.Items;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 /*! \class Item
     \brief. Implementeaza notiunea abstracta de entitate activa din joc, "element cu care se poate interactiona: monstru, turn etc.".
@@ -48,7 +49,7 @@ public abstract class Item
     }
 
         ///Metoda abstracta destinata actualizarii starii curente
-    public abstract void Update();
+    public abstract void Update() throws FileNotFoundException;
         ///Metoda abstracta destinata desenarii starii curente
     public abstract void Draw(Graphics g);
         ///Metoda abstracta destinata executarii unei actiuni atunci cand apasam tasta E langa un Item concret

@@ -144,8 +144,12 @@ public class Game implements Runnable {
                 /// Daca diferenta de timp dintre currentTime si oldTime e mai mare decat 16.6 ms
             if((currentTime - oldTime) > timeFrame){
                     /// Actualizeaza pozitiile elementelor
-                Update();
-                    /// Deseneaza elementele grafice in fereastra
+                try {
+                    Update();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                /// Deseneaza elementele grafice in fereastra
                 Draw();
                 oldTime = currentTime;
             }
@@ -204,7 +208,7 @@ public class Game implements Runnable {
 
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
-    private void Update()
+    private void Update() throws FileNotFoundException
     {
             ///Determina starea tastelor
         keyManager.Update();

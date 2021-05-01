@@ -22,7 +22,8 @@ public class PlayState extends State
 
         \param refLink O referinta catre un obiect "shortcut", obiect ce contine o serie de referinte utile in program.
      */
-    public PlayState(RefLinks refLink) throws FileNotFoundException {
+    public PlayState(RefLinks refLink) throws FileNotFoundException
+    {
             /// Apel al constructorului clasei de baza
         super(refLink);
             /// Construieste harta jocului
@@ -37,7 +38,7 @@ public class PlayState extends State
         \brief Actualizeaza starea curenta a jocului.
      */
     @Override
-    public void Update()
+    public void Update() throws FileNotFoundException
     {
         map.Update();
         hero.Update();

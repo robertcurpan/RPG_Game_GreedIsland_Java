@@ -3,6 +3,7 @@ package GreedIsland.States;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 /*! \class State
     \brief Implementeaza notiunea abstracta de stare a jocului/programului.
@@ -32,7 +33,7 @@ public abstract class State {
     public static State GetState() { return currentState; }
 
         /// Metoda abstracta destinata actualizarii starii curente
-    public abstract void Update();
+    public abstract void Update() throws FileNotFoundException;
         /// Metoda abstracta destinata desenarii starii curente
     public abstract void Draw(Graphics g);
 }

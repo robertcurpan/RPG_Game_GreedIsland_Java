@@ -10,6 +10,7 @@ import GreedIsland.RefLinks;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 
 /*! \class public class Hero extends Character
     \brief Implementeaza notiunea de erou/player (caracterul controlat de jucator).
@@ -74,7 +75,7 @@ public class Hero extends Character
         \brief Actualizeaza pozitia si imaginea eroului.
      */
     @Override
-    public void Update()
+    public void Update() throws FileNotFoundException
     {
             /// Verifica daca a fost apasata o tasta
         GetInput();
@@ -171,12 +172,18 @@ public class Hero extends Character
     /*! \fn public boolean WillCollideWithTiles()
         \brief Verificam daca exista coliziuni intre erou si elementele "solide" ale hartii. Vom folosi harta din RefLinks
      */
-    public boolean WillCollideWithTiles()
+    public boolean WillCollideWithTiles() throws FileNotFoundException
     {
         int[][] frontLayerMap = refLink.GetMap().getMapTiles().getFrontLayer();
         for(int i=0; i<frontLayerMap.length; i++)
             for(int j=0; j<frontLayerMap[i].length; j++)
             {
+                // Verificam daca trebuie sa facem tranzitia catre o alta scena (daca exista coliziune cu pietris, apelam changeScene() unde se va verifica daca eroul a iesit de pe harta)
+                if((refLink.GetMap().GetTileBackLayer(i,j).GetId() == 1 && Collision.CollisionDetection(nextPos, new Rectangle(i*32, j*32, 32, 32))))
+                {
+                    refLink.GetMap().changeScene();
+                }
+
                 // Verificam coliziunea intre urmatoarea pozitie a dreptunghiului de coliziune al eroului si dreptunghiul de coliziune al tile-urilor.
                 if(frontLayerMap[i][j] != 0 && refLink.GetMap().GetTileFrontLayer(i,j).IsSolid() &&
                         Collision.CollisionDetection(nextPos, new Rectangle(i*32 + refLink.GetMap().GetTileFrontLayer(i,j).tileBounds.x, j*32 + refLink.GetMap().GetTileFrontLayer(i,j).tileBounds.y,
