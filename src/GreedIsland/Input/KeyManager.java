@@ -11,14 +11,16 @@ import java.awt.event.KeyListener;
     ca tasta respectiva a fost apasata si false nu a fost apasata.
  */
 public class KeyManager implements KeyListener {
-    private boolean[] keys;     // Vector de flaguri pt toate tastele. Tastele vor fi regasite dupa cod [0-255]
-    public boolean up;          // Flag pentru tasta "sus" apasata.
-    public boolean down;        // Flag pentru tasta "jos" apasata.
-    public boolean left;        // Flag pentru tasta "stanga" apasata.
-    public boolean right;       // Flag pentru tasta "dreapta" apasata.
-    public boolean e;           // Flag pentru apasarea tastei "E"
-    public int lastKeyPressed;  // Ultima tasta apasata
-    public int lastKeyReleased; // Ultima tasta eliberata
+    private boolean[] keys;         // Vector de flaguri pt toate tastele. Tastele vor fi regasite dupa cod [0-255]
+    public boolean up;              // Flag pentru tasta "sus" apasata.
+    public boolean down;            // Flag pentru tasta "jos" apasata.
+    public boolean left;            // Flag pentru tasta "stanga" apasata.
+    public boolean right;           // Flag pentru tasta "dreapta" apasata.
+    public boolean e;               // Flag pentru apasarea tastei "E"
+    public boolean space;           // Flag pentru apasarea tastei "Space"
+    public int lastKeyPressed;      // Ultima tasta apasata
+    public int lastKeyReleased;     // Ultima tasta eliberata
+    public boolean spaceReleased;   // Flag care ne indica daca tasta SPACE a fost eliberata (de catre utilizator)
 
     /*! \fn public KeyManager()
         \brief Constructorul clasei.
@@ -34,6 +36,7 @@ public class KeyManager implements KeyListener {
         left    = keys[KeyEvent.VK_A];
         right   = keys[KeyEvent.VK_D];
         e       = keys[KeyEvent.VK_E];
+        space   = keys[KeyEvent.VK_SPACE];
     }
 
     /*! \fn public void keyPressed(KeyEvent e)
@@ -45,7 +48,8 @@ public class KeyManager implements KeyListener {
     public void keyPressed(KeyEvent e){
             /// Se retine in vectorul de flaguri ca o tasta a fost apasata.
         keys[e.getKeyCode()] = true;
-        lastKeyPressed = e.getKeyCode();
+        if(e.getKeyCode() != KeyEvent.VK_SPACE)    // nu vom salva in lastKeyPressed apasarea tastei space
+            lastKeyPressed = e.getKeyCode();
     }
 
     /*! \fn public void keyReleased(KeyEvent e)
@@ -57,7 +61,10 @@ public class KeyManager implements KeyListener {
     public void keyReleased(KeyEvent e){
             /// Se retine in vectorul de flaguri ca o tasta a fost eliberata.
         keys[e.getKeyCode()] = false;
-        lastKeyReleased = e.getKeyCode();
+        if(e.getKeyCode() != KeyEvent.VK_SPACE)
+            lastKeyReleased = e.getKeyCode();
+        else
+            spaceReleased = true;
     }
 
     /*! \fn public void keyTyped(KeyEvent e)

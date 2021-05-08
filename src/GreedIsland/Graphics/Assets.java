@@ -13,6 +13,9 @@ public class Assets {
     public static BufferedImage heroRight;
     public static BufferedImage heroUp;
     public static BufferedImage heroDown;
+    public static BufferedImage wolfDown;
+    public static BufferedImage orcDown;
+    public static BufferedImage skeletonDown;
         /// Referinte catre elementele grafice (dale) utilizate in joc.
     public static BufferedImage dirt;
     public static BufferedImage grass;
@@ -65,6 +68,8 @@ public class Assets {
     public static void Init(){
             /// Se creeaza temporar obiecte de tip SpriteSheetCharacters initializate prin intermediul clasei ImageLoader
         SpriteSheetCharacters sheetMainCharacters = new SpriteSheetCharacters(ImageLoader.LoadImage("/textures/Characters_sprites.png"));
+            /// Se creeaza temporar obiecte de tip SpriteSheetCharacters initializate prin intermediul clasei ImageLoader
+        SpriteSheetCharacters sheetEnemies = new SpriteSheetCharacters(ImageLoader.LoadImage("/textures/Enemies_sprites.png"));
             /// Se creeaza temporar obiecte de tip SpriteSheet initializate prin intermediul clasei ImageLoader
         SpriteSheet sheetMap1 = new SpriteSheet(ImageLoader.LoadImage("/textures/Forest+House_Tileset.png"));
 
@@ -73,6 +78,10 @@ public class Assets {
         heroRight = sheetMainCharacters.crop(0, 11);
         heroUp = sheetMainCharacters.crop(0,8);
         heroDown = sheetMainCharacters.crop(0,10);
+            /// Se obtin cateva subimagini corespunzatoare inamicilor concreti (folosite pt setarea imaginii lor in constructor)
+        wolfDown = sheetEnemies.crop(26,10);
+        orcDown = sheetEnemies.crop(0,10);
+        skeletonDown = sheetEnemies.crop(13,10);
             /// Se obtin subimaginile corespunzatoare tile-urilor necesare
         dirt = sheetMap1.crop(8,9);
         grass = sheetMap1.crop(4,1);

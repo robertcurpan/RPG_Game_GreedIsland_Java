@@ -1,6 +1,7 @@
 package GreedIsland.Animations;
 
 import GreedIsland.Graphics.SpriteSheetCharacters;
+import GreedIsland.RefLinks;
 
 import java.awt.image.BufferedImage;
 
@@ -9,6 +10,8 @@ public abstract class Animation
     private int animID;         // id-ul animatiei
     private double animSpeed;   // cat de "repede" sa se faca tranzitiile intre imagini (care formeaza animatia)
     private int nrFrames;       // numarul de frameuri (nr de imagini) ale animatiei
+    public boolean ongoingAttackAnimation; //Acest camp ne va indica daca ne aflam in timpul unei animatii de atac sau nu
+    public int attackAnimationDuration;    //Cu ajutorul acestui camp vom putea executa o singura animatie de atac la apasarea tastei SPACE
 
         /// Fiecare caracter va implementa spritesheet-ul corespunzator
     protected SpriteSheetCharacters characterSheet;

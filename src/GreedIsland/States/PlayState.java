@@ -1,5 +1,7 @@
 package GreedIsland.States;
 
+import GreedIsland.Items.ConcreteEnemies.Wolf;
+import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Hero;
 import GreedIsland.Maps.Map;
 import GreedIsland.RefLinks;
@@ -14,6 +16,8 @@ public class PlayState extends State
 {
     private Hero hero;  // Referinta catre obiectul animat erou (controlat de utilizator)
     private Map map;    // Referinta catre harta curenta
+
+    private Enemy wolf1; // TODO (de scos de aici dupa terminarea testarii)
 
  // ############################################################### //
 
@@ -32,6 +36,9 @@ public class PlayState extends State
         refLink.SetMap(map);
             /// Construieste eroul (folosing o functie specifica Singleton)
         hero = Hero.getHeroInstance(refLink, 100, 100);
+
+        // Construim un inamic concret (wolf) pt testare
+        wolf1 = new Wolf(refLink, 400, 400); // TODO (de scos de aici dupa terminarea testarii)
     }
 
     /*! \fn public void Update()
@@ -42,6 +49,8 @@ public class PlayState extends State
     {
         map.Update();
         hero.Update();
+
+        wolf1.Update(); // TODO (de scos de aici dupa terminarea testarii)
     }
 
     /*! \fn public void Draw(Graphics g)
@@ -54,5 +63,7 @@ public class PlayState extends State
     {
         map.Draw(g);
         hero.Draw(g);
+
+        wolf1.Draw(g); // TODO (de scos de aici dupa terminarea testarii)
     }
 }

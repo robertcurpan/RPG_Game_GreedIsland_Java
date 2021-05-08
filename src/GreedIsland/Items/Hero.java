@@ -28,7 +28,7 @@ public class Hero extends Character
 
  // ################################################################################################# //
 
-    /*! \fn public Hero(RefLinks refLink, float x, float y)
+    /*! \fn private Hero(RefLinks refLink, float x, float y)
         \brief Constructorul de initializare al clasei Hero.
 
         \param refLink Referinta catre obiectul shortcut (obiect ce retine o serie de referinte din program).
@@ -167,6 +167,11 @@ public class Hero extends Character
             nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
+        if(km.space && km.spaceReleased == true) //km.spaceReleased == true ne indica faptul ca putem ataca din nou
+        {
+            animation.ongoingAttackAnimation = true;
+            km.spaceReleased = false;
+        }
     }
 
     /*! \fn public boolean WillCollideWithTiles()
@@ -231,36 +236,52 @@ public class Hero extends Character
      */
     public int setAnimationID()
     {
-        int animID = 5; // implicit, la pornirea jocului, "animatia" selectata va fi idle-down.
+        int animID = AnimationList.heroIdleDown.ordinal(); // implicit, la pornirea jocului, "animatia" selectata va fi idle-down.
 
-        if(GetXMove() == 0 && GetYMove() == 0) // daca eroul e stationat, trebuie sa-i atribuim o imagine idle corespunzatoare directiei in care s-a oprit
+        if(animation.ongoingAttackAnimation == false)
         {
-            // trebuie sa aflam care este ultima tasta eliberata (released) pt a sti care imagine idle trebuie sa o atribuim eroului.
-            switch(refLink.GetKeyManager().lastKeyReleased)
+            if(GetXMove() == 0 && GetYMove() == 0) // daca eroul e stationat, trebuie sa-i atribuim o imagine idle corespunzatoare directiei in care s-a oprit
             {
-                case KeyEvent.VK_W: { animID = AnimationList.idleUp.ordinal(); break; }
-                case KeyEvent.VK_A: { animID = AnimationList.idleLeft.ordinal(); break; }
-                case KeyEvent.VK_S: { animID = AnimationList.idleDown.ordinal(); break; }
-                case KeyEvent.VK_D: { animID = AnimationList.idleRight.ordinal(); break; }
-                default: break;
+                // trebuie sa aflam care este ultima tasta eliberata (released) pt a sti care imagine idle trebuie sa o atribuim eroului.
+                switch(refLink.GetKeyManager().lastKeyReleased)
+                {
+                    case KeyEvent.VK_W: { animID = AnimationList.heroIdleUp.ordinal(); break; }
+                    case KeyEvent.VK_A: { animID = AnimationList.heroIdleLeft.ordinal(); break; }
+                    case KeyEvent.VK_S: { animID = AnimationList.heroIdleDown.ordinal(); break; }
+                    case KeyEvent.VK_D: { animID = AnimationList.heroIdleRight.ordinal(); break; }
+                    default: break;
+                }
+            }
+            else
+            {
+                if (refLink.GetKeyManager().left == true) {
+                    animID = AnimationList.heroWalkLeft.ordinal();
+                }
+                if (refLink.GetKeyManager().right == true) {
+                    animID = AnimationList.heroWalkRight.ordinal();
+                }
+                if (refLink.GetKeyManager().up == true) {
+                    animID = AnimationList.heroWalkUp.ordinal();
+                }
+                if (refLink.GetKeyManager().down == true) {
+                    animID = AnimationList.heroWalkDown.ordinal();
+                }
             }
         }
         else
         {
-            if (refLink.GetKeyManager().left == true) {
-                animID = AnimationList.walkLeft.ordinal();
+            // Indiferent daca eroul e stationat sau nu, apasarea tastei Space declanseaza atacul
+            // Selectam in ce directie se realizeaza atacul in functie de ultima tasta apasata
+            switch(refLink.GetKeyManager().lastKeyPressed)
+            {
+                case KeyEvent.VK_W: { animID = AnimationList.heroAttackUp.ordinal(); break; }
+                case KeyEvent.VK_A: { animID = AnimationList.heroAttackLeft.ordinal(); break; }
+                case KeyEvent.VK_S: { animID = AnimationList.heroAttackDown.ordinal(); break; }
+                case KeyEvent.VK_D: { animID = AnimationList.heroAttackRight.ordinal(); break; }
+                default: break;
             }
-            if (refLink.GetKeyManager().right == true) {
-                animID = AnimationList.walkRight.ordinal();
-            }
-            if (refLink.GetKeyManager().up == true) {
-                animID = AnimationList.walkUp.ordinal();
-            }
-            if (refLink.GetKeyManager().down == true) {
-                animID = AnimationList.walkDown.ordinal();
-            }
-
         }
+
         return animID;
     }
 
