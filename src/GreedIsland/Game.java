@@ -3,6 +3,7 @@ package GreedIsland;
 import GreedIsland.GameWindow.GameWindow;
 import GreedIsland.Graphics.Assets;
 import GreedIsland.Input.KeyManager;
+import GreedIsland.Items.Hero;
 import GreedIsland.States.*;
 import GreedIsland.Tiles.Tile;
 
@@ -218,6 +219,7 @@ public class Game implements Runnable {
                 /// Actualizez starea curenta a jocului, daca exista.
             State.GetState().Update();
         }
+
     }
 
     /*! \fn private void Draw()

@@ -18,10 +18,11 @@ public abstract class Character extends Item
     public static final int DEFAULT_CREATURE_WIDTH  = 64;   /*!< Latimea implicita a imaginii caracterului.*/
     public static final int DEFAULT_CREATURE_HEIGHT = 64;   /*!< Inaltimea implicita a imaginii caracterului.*/
 
-    protected int life;     /*!< Retine viata caracterului.*/
-    protected float speed;  /*!< Retine viteza de deplasare caracterului.*/
-    protected float xMove;  /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa X / frame.*/
-    protected float yMove;  /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa Y / frame.*/
+    protected int life;             /*!< Retine viata caracterului.*/
+    protected float speed;          /*!< Retine viteza de deplasare caracterului.*/
+    protected float xMove;          /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa X / frame.*/
+    protected float yMove;          /*!< Retine cu cat se deplaseaza caracterul (in pixeli) pe axa Y / frame.*/
+    protected Rectangle healthBar;  /*!< Dreptunghi care reprezinta health bar-ul inamicului (va fi setat deasupra capului si isi va schimba culoarea in functie de hp-ul curent)*/
 
     protected Rectangle nextPos; /*!< Retine pozitia viitoare a unui caracter. Punem acest camp aici (si nu doar in Hero) deoarece
                                     s-ar putea sa mai avem nevoie de el si in cazul inamicilor */

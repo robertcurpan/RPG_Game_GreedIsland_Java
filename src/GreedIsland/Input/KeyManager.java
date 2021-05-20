@@ -20,7 +20,6 @@ public class KeyManager implements KeyListener {
     public boolean space;           // Flag pentru apasarea tastei "Space"
     public int lastKeyPressed;      // Ultima tasta apasata
     public int lastKeyReleased;     // Ultima tasta eliberata
-    public boolean spaceReleased;   // Flag care ne indica daca tasta SPACE a fost eliberata (de catre utilizator)
 
     /*! \fn public KeyManager()
         \brief Constructorul clasei.
@@ -63,8 +62,7 @@ public class KeyManager implements KeyListener {
         keys[e.getKeyCode()] = false;
         if(e.getKeyCode() != KeyEvent.VK_SPACE)
             lastKeyReleased = e.getKeyCode();
-        else
-            spaceReleased = true;
+
     }
 
     /*! \fn public void keyTyped(KeyEvent e)

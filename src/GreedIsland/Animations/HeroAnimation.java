@@ -3,6 +3,7 @@ package GreedIsland.Animations;
 import GreedIsland.Graphics.Assets;
 import GreedIsland.Graphics.ImageLoader;
 import GreedIsland.Graphics.SpriteSheetCharacters;
+import GreedIsland.Items.Hero;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
@@ -19,6 +20,7 @@ public class HeroAnimation extends Animation
         setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
         ongoingAttackAnimation = false;
         attackAnimationDuration = 0;
+        canInflictDamageToEnemies = false;
     }
 
     /*! \fn public BufferedImage playAnimation()
@@ -26,7 +28,7 @@ public class HeroAnimation extends Animation
                 viteza animatiei (animSpeed) si de nr de frame-uri (imagini) ale fiecarui tip de animatie)
      */
     @Override
-    public BufferedImage playAnimation()
+    public BufferedImage playAnimation(RefLinks refLink)
     {
         BufferedImage image = null;
 
@@ -92,12 +94,39 @@ public class HeroAnimation extends Animation
 
         if(getAnimID() == AnimationList.heroAttackUp.ordinal())
         {
+            // undeva pe la inceputul animatiei de atac vom seta bound-urile asociate attackMode-ului (facem acest if pt a nu se seta la fiecare frame)
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 6))
+            {
+                Hero hero = Hero.getHeroInstance(refLink, 0, 0);
+                hero.setAttackBoundsForHero(new Rectangle(hero.getNormalBoundsForHero().x + 8, hero.getNormalBoundsForHero().y - hero.getAttackRange()/2, hero.getNormalBoundsForHero().width - 12, hero.getAttackRange()));
+            }
+
+            // la jumatatea animatiei de atac se vor produce daunele in randul inamicilor loviti
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 2))
+            {
+                canInflictDamageToEnemies = true;
+            }
+
             setAnimSpeed((0.75 * Math.pow(10,8)));
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
+                //ongoingAttackAnimation = true;
                 attackAnimationDuration++;
                 setNrFrames(6);
-                imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
+                if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 0;
+                if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 1;
+                if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 2;
+                if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 3;
+                if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 4;
+                if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 5;
                 imgPozY = 12;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
@@ -111,12 +140,39 @@ public class HeroAnimation extends Animation
 
         if(getAnimID() == AnimationList.heroAttackDown.ordinal())
         {
+            // undeva pe la inceputul animatiei de atac vom seta bound-urile asociate attackMode-ului (facem acest if pt a nu se seta la fiecare frame)
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 6))
+            {
+                Hero hero = Hero.getHeroInstance(refLink, 0, 0);
+                hero.setAttackBoundsForHero(new Rectangle(hero.getNormalBoundsForHero().x + 8, hero.getNormalBoundsForHero().y + hero.getNormalBoundsForHero().height, hero.getNormalBoundsForHero().width - 12, hero.getAttackRange()));
+            }
+
+            // la jumatatea animatiei de atac se vor produce daunele in randul inamicilor loviti
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 2))
+            {
+                canInflictDamageToEnemies = true;
+            }
+
             setAnimSpeed((0.75 * Math.pow(10,8)));
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
+                //ongoingAttackAnimation = true;
                 attackAnimationDuration++;
                 setNrFrames(6);
-                imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
+                if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 0;
+                if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 1;
+                if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 2;
+                if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 3;
+                if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 4;
+                if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 5;
                 imgPozY = 14;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
@@ -130,12 +186,39 @@ public class HeroAnimation extends Animation
 
         if(getAnimID() == AnimationList.heroAttackLeft.ordinal())
         {
+            // undeva pe la inceputul animatiei de atac vom seta bound-urile asociate attackMode-ului (facem acest if pt a nu se seta la fiecare frame)
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 6))
+            {
+                Hero hero = Hero.getHeroInstance(refLink, 0, 0);
+                hero.setAttackBoundsForHero(new Rectangle(hero.getNormalBoundsForHero().x - hero.getAttackRange()/2, hero.getNormalBoundsForHero().y + 8, hero.getAttackRange(), hero.getNormalBoundsForHero().height - 8));
+            }
+
+            // la jumatatea animatiei de atac se vor produce daunele in randul inamicilor loviti
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 2))
+            {
+                canInflictDamageToEnemies = true;
+            }
+
             setAnimSpeed((0.75 * Math.pow(10,8)));
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
+                //ongoingAttackAnimation = true;
                 attackAnimationDuration++;
                 setNrFrames(6);
-                imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
+                if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 0;
+                if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 1;
+                if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 2;
+                if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 3;
+                if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 4;
+                if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 5;
                 imgPozY = 13;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
@@ -149,12 +232,38 @@ public class HeroAnimation extends Animation
 
         if(getAnimID() == AnimationList.heroAttackRight.ordinal())
         {
+            // undeva pe la inceputul animatiei de atac vom seta bound-urile asociate attackMode-ului (facem acest if pt a nu se seta la fiecare frame)
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 6))
+            {
+                Hero hero = Hero.getHeroInstance(refLink, 0, 0);
+                hero.setAttackBoundsForHero(new Rectangle(hero.getNormalBoundsForHero().x + 3*hero.getNormalBoundsForHero().width/4, hero.getNormalBoundsForHero().y + 8, hero.getAttackRange(), hero.getNormalBoundsForHero().height - 8));
+            }
+
+            // la jumatatea animatiei de atac se vor produce daunele in randul inamicilor loviti
+            if(attackAnimationDuration == (int)(60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9) / 2))
+            {
+                canInflictDamageToEnemies = true;
+            }
+
             setAnimSpeed((0.75 * Math.pow(10,8)));
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
+                //ongoingAttackAnimation = true;
                 attackAnimationDuration++;
                 setNrFrames(6);
-                imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
+                // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
+                if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 0;
+                if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 1;
+                if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 2;
+                if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 3;
+                if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 4;
+                if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 5;
                 imgPozY = 15;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }

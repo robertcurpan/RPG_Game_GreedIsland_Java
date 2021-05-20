@@ -7,18 +7,18 @@ import GreedIsland.RefLinks;
 import java.awt.image.BufferedImage;
 
 
-public class WolfAnimation extends Animation
+public class OrcAnimation extends Animation
 {
     private int imgPozX, imgPozY;
     private int restingTimeAfterAttack;     // Cat timp trebuie sa se odihneasca inamicul dupa ce ataca
     private int waitForNextAttack;          // Contor pt perioada de timp pe care inamicul trebuie sa o astepte pt a realiza urmatorul atac. Inamicul va putea ataca din nou cand aceasta variabila atinge o anumite valoare (de ex 3*60 = 3 secunde)
 
-    public WolfAnimation()
+    public OrcAnimation()
     {
-        // Spritesheet-ul inamicului de tip Wolf
+        // Spritesheet-ul inamicului de tip Orc
         characterSheet = new SpriteSheetCharacters(ImageLoader.LoadImage("/textures/Enemies_sprites.png"));
 
-        // Paramaters of Wolf's animation
+        // Paramaters of Orc's animation
         setAnimSpeed((1.5 * Math.pow(10,8)));   // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
         restingTimeAfterAttack = 3 * 60 / 2;    // dupa ce ataca, inamicul trebuie sa se odihneasca pt 1.5 secunde pt a putea ataca din nou
 
@@ -41,80 +41,80 @@ public class WolfAnimation extends Animation
     {
         BufferedImage image = null;
 
-        if(getAnimID() == AnimationList.wolfWalkRight.ordinal())
+        if(getAnimID() == AnimationList.orcWalkRight.ordinal())
         {
             // Animatia de mers la dreapta
             setAnimSpeed((1.5 * Math.pow(10,8)));
             setNrFrames(9);
-            imgPozX = 26 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la dreapta
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la dreapta
             imgPozY = 11;   // frame-urile pt animatia de mers la dreapta se afla pe linia 11
             image = characterSheet.crop(imgPozX, imgPozY);
 
             //canAttack = true; // daca eroul s-a indepartat de inamic (din range-ul de atac al inamicului), inamicul nu mai trebuie sa astepte cele 3 secunde; la urmatoarea ocazie va putea ataca din nou.
         }
 
-        if(getAnimID() == AnimationList.wolfWalkLeft.ordinal())
+        if(getAnimID() == AnimationList.orcWalkLeft.ordinal())
         {
             // Animatia de mers la stanga
             setAnimSpeed((1.5 * Math.pow(10,8)));
             setNrFrames(9);
-            imgPozX = 26 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la stanga
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la stanga
             imgPozY = 9;   // frame-urile pt animatia de mers la stanga se afla pe linia 9
             image = characterSheet.crop(imgPozX, imgPozY);
 
             //canAttack = true; // daca eroul s-a indepartat de inamic (din range-ul de atac al inamicului), inamicul nu mai trebuie sa astepte cele 3 secunde; la urmatoarea ocazie va putea ataca din nou.
         }
 
-        if(getAnimID() == AnimationList.wolfWalkUp.ordinal())
+        if(getAnimID() == AnimationList.orcWalkUp.ordinal())
         {
             // Animatia de mers la in sus
             setAnimSpeed((1.5 * Math.pow(10,8)));
             setNrFrames(9);
-            imgPozX = 26 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in sus
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in sus
             imgPozY = 8;   // frame-urile pt animatia de mers in sus se afla pe linia 8
             image = characterSheet.crop(imgPozX, imgPozY);
 
             //canAttack = true; // daca eroul s-a indepartat de inamic (din range-ul de atac al inamicului), inamicul nu mai trebuie sa astepte cele 3 secunde; la urmatoarea ocazie va putea ataca din nou.
         }
 
-        if(getAnimID() == AnimationList.wolfWalkDown.ordinal())
+        if(getAnimID() == AnimationList.orcWalkDown.ordinal())
         {
             // Animatia de mers in jos
             setAnimSpeed((1.5 * Math.pow(10,8)));
             setNrFrames(9);
-            imgPozX = 26 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in jos
+            imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in jos
             imgPozY = 10;   // frame-urile pt animatia de mers in jos se afla pe linia 10
             image = characterSheet.crop(imgPozX, imgPozY);
 
             //canAttack = true; // daca eroul s-a indepartat de inamic (din range-ul de atac al inamicului), inamicul nu mai trebuie sa astepte cele 3 secunde; la urmatoarea ocazie va putea ataca din nou.
         }
 
-        if(getAnimID() == AnimationList.wolfIdleUp.ordinal())
+        if(getAnimID() == AnimationList.orcIdleUp.ordinal())
         {
-            image = characterSheet.crop(26,8);
+            image = characterSheet.crop(0,8);
         }
 
-        if(getAnimID() == AnimationList.wolfIdleDown.ordinal())
+        if(getAnimID() == AnimationList.orcIdleDown.ordinal())
         {
-            image = characterSheet.crop(26,10);
+            image = characterSheet.crop(0,10);
         }
 
-        if(getAnimID() == AnimationList.wolfIdleLeft.ordinal())
+        if(getAnimID() == AnimationList.orcIdleLeft.ordinal())
         {
-            image = characterSheet.crop(26,9);
+            image = characterSheet.crop(0,9);
         }
 
-        if(getAnimID() == AnimationList.wolfIdleRight.ordinal())
+        if(getAnimID() == AnimationList.orcIdleRight.ordinal())
         {
-            image = characterSheet.crop(26,11);
+            image = characterSheet.crop(0,11);
         }
 
         // pt animatia de atac a acestui inamic vom proceda la fel ca in clasa HeroAnimation.
 
-        if(getAnimID() == AnimationList.wolfAttackUp.ordinal())
+        if(getAnimID() == AnimationList.orcAttackUp.ordinal())
         {
             setAnimSpeed((0.4 * Math.pow(10,8)));
-            setNrFrames(6);
+            setNrFrames(8);
 
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
@@ -127,21 +127,24 @@ public class WolfAnimation extends Animation
                     canInflictDamageToHero = true;
                 }
 
-                //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
                 // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
                 if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 26;
+                    imgPozX = 0;
                 if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 27;
+                    imgPozX = 1;
                 if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 28;
+                    imgPozX = 2;
                 if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 29;
+                    imgPozX = 3;
                 if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 30;
+                    imgPozX = 4;
                 if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 31;
-                imgPozY = 12;
+                    imgPozX = 5;
+                if(attackAnimationDuration >= 6 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 7 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 6;
+                if(attackAnimationDuration >= 7 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 8 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 7;
+                imgPozY = 4;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
             else
@@ -153,10 +156,10 @@ public class WolfAnimation extends Animation
             }
         }
 
-        if(getAnimID() == AnimationList.wolfAttackDown.ordinal())
+        if(getAnimID() == AnimationList.orcAttackDown.ordinal())
         {
             setAnimSpeed((0.4 * Math.pow(10,8)));
-            setNrFrames(6);
+            setNrFrames(8);
 
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
@@ -172,18 +175,22 @@ public class WolfAnimation extends Animation
                 //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
                 // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
                 if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 26;
+                    imgPozX = 0;
                 if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 27;
+                    imgPozX = 1;
                 if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 28;
+                    imgPozX = 2;
                 if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 29;
+                    imgPozX = 3;
                 if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 30;
+                    imgPozX = 4;
                 if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 31;
-                imgPozY = 14;
+                    imgPozX = 5;
+                if(attackAnimationDuration >= 6 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 7 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 6;
+                if(attackAnimationDuration >= 7 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 8 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 7;
+                imgPozY = 6;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
             else
@@ -195,10 +202,10 @@ public class WolfAnimation extends Animation
             }
         }
 
-        if(getAnimID() == AnimationList.wolfAttackLeft.ordinal())
+        if(getAnimID() == AnimationList.orcAttackLeft.ordinal())
         {
             setAnimSpeed((0.4 * Math.pow(10,8)));
-            setNrFrames(6);
+            setNrFrames(8);
 
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
@@ -214,18 +221,22 @@ public class WolfAnimation extends Animation
                 //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
                 // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
                 if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 26;
+                    imgPozX = 0;
                 if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 27;
+                    imgPozX = 1;
                 if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 28;
+                    imgPozX = 2;
                 if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 29;
+                    imgPozX = 3;
                 if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 30;
+                    imgPozX = 4;
                 if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 31;
-                imgPozY = 13;
+                    imgPozX = 5;
+                if(attackAnimationDuration >= 6 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 7 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 6;
+                if(attackAnimationDuration >= 7 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 8 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 7;
+                imgPozY = 5;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
             else
@@ -237,10 +248,10 @@ public class WolfAnimation extends Animation
             }
         }
 
-        if(getAnimID() == AnimationList.wolfAttackRight.ordinal())
+        if(getAnimID() == AnimationList.orcAttackRight.ordinal())
         {
             setAnimSpeed((0.4 * Math.pow(10,8)));
-            setNrFrames(6);
+            setNrFrames(8);
 
             if(attackAnimationDuration < (60 * getNrFrames() * getAnimSpeed() / (float)Math.pow(10,9))) //am pus durata (in frame-uri) a unui atac
             {
@@ -256,18 +267,22 @@ public class WolfAnimation extends Animation
                 //imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());
                 // Facem in felul acesta pt ca, la fiecare atac, animatia sa inceapa de la inceput
                 if(attackAnimationDuration < 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 26;
+                    imgPozX = 0;
                 if(attackAnimationDuration >= 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 27;
+                    imgPozX = 1;
                 if(attackAnimationDuration >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 28;
+                    imgPozX = 2;
                 if(attackAnimationDuration >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 29;
+                    imgPozX = 3;
                 if(attackAnimationDuration >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 30;
+                    imgPozX = 4;
                 if(attackAnimationDuration >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 31;
-                imgPozY = 15;
+                    imgPozX = 5;
+                if(attackAnimationDuration >= 6 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 7 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 6;
+                if(attackAnimationDuration >= 7 * 60 * getAnimSpeed() / Math.pow(10,9) && attackAnimationDuration < 8 * 60 * getAnimSpeed() / Math.pow(10,9))
+                    imgPozX = 7;
+                imgPozY = 7;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }
             else
@@ -289,7 +304,7 @@ public class WolfAnimation extends Animation
             }
         }
 
-        if(getAnimID() == AnimationList.wolfDeath.ordinal())
+        if(getAnimID() == AnimationList.orcDeath.ordinal())
         {
             setAnimSpeed((1.6 * Math.pow(10,8)));
             setNrFrames(6);
@@ -298,17 +313,17 @@ public class WolfAnimation extends Animation
                 deathAnimationCounter++;
 
                 if(deathAnimationCounter < 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 26;
+                    imgPozX = 0;
                 if(deathAnimationCounter >= 60 * getAnimSpeed() / Math.pow(10,9) && deathAnimationCounter < 2 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 27;
+                    imgPozX = 1;
                 if(deathAnimationCounter >= 2 * 60 * getAnimSpeed() / Math.pow(10,9) && deathAnimationCounter < 3 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 28;
+                    imgPozX = 2;
                 if(deathAnimationCounter >= 3 * 60 * getAnimSpeed() / Math.pow(10,9) && deathAnimationCounter < 4 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 29;
+                    imgPozX = 3;
                 if(deathAnimationCounter >= 4 * 60 * getAnimSpeed() / Math.pow(10,9) && deathAnimationCounter < 5 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 30;
+                    imgPozX = 4;
                 if(deathAnimationCounter >= 5 * 60 * getAnimSpeed() / Math.pow(10,9) && deathAnimationCounter < 6 * 60 * getAnimSpeed() / Math.pow(10,9))
-                    imgPozX = 31;
+                    imgPozX = 5;
                 imgPozY = 20;
                 image = characterSheet.crop(imgPozX, imgPozY);
             }

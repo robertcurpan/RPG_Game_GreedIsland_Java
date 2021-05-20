@@ -1,9 +1,11 @@
 package GreedIsland.Maps.MapPopulation;
 
+import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Item;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 // FACTORY METHOD 2 //
@@ -17,8 +19,14 @@ import java.util.ArrayList;
 // Clasa Product din sablonul Factory
 public abstract class MapPopulation
 {
-    protected ArrayList<Item> items;  // vector de iteme pt o harta (va fi folosit de clasele derivate (Concrete Products)
+    protected ArrayList<Item> items;    // vector de iteme pt o harta (va fi folosit de clasele derivate (Concrete Products))
+    protected ArrayList<Enemy> enemies; // vector de inamici pt o harta (va fi folosit de clasele derivate)
 
     public abstract void drawItems(Graphics g);
     public abstract ArrayList<Item> getItems();
+
+    public abstract void drawEnemies(Graphics g);
+    public abstract void updateEnemies() throws FileNotFoundException;
+    public abstract ArrayList<Enemy> getEnemies();
+
 }

@@ -24,7 +24,12 @@ import java.io.FileNotFoundException;
 public class Hero extends Character
 {
     private static Hero heroInstance;   // Vom face aceasta clasa sa fie Singleton
-    private BufferedImage image;    /*!< Referinta catre imaginea curenta a eroului.*/
+    private BufferedImage image;        /*!< Referinta catre imaginea curenta a eroului.*/
+
+    private int attackRange;            /*!< Range-ul atacului eroului*/
+    private boolean canAttack;          /*!< Flag care ne indica daca eroul poate ataca din nou (nu am vrea ca eroul sa spammeze atacul */
+    private int restingTimeAfterAttack; /*!< Cat timp trebuie sa se "odihneasca" eroul dupa ce ataca o data */
+    private int restingTimeCounter;     /*!< Contorizam cat timp a trecut de la ultimul atac al eroului */
 
  // ################################################################################################# //
 
@@ -37,25 +42,38 @@ public class Hero extends Character
      */
     private Hero(RefLinks refLink, float x, float y)
     {
-            /// Apel al constructorului clasei de baza
+        // Apel al constructorului clasei de baza
         super(refLink, x, y, Character.DEFAULT_CREATURE_WIDTH, Character.DEFAULT_CREATURE_HEIGHT);
-            /// Seteaza imaginea de start a eroului
+        // Seteaza imaginea de start a eroului
         image = Assets.heroRight;
 
-            /// Stabileste pozitia relativa si dimensiunea dreptunghiului de coliziune in starea implicita (normala)
+        // Stabileste pozitia relativa si dimensiunea dreptunghiului de coliziune in starea implicita (normala)
         normalBounds.x = 8;
         normalBounds.y = 8;
         normalBounds.width = 48;
         normalBounds.height = 48;
-            /// Stabileste pozitia relativa si dimensiunea dreptunghiului de coliziune in starea de atac
-        attackBounds.x = 0;
-        attackBounds.y = 0;
-        attackBounds.width = 64;
-        attackBounds.height = 64;
+        // Stabileste pozitia relativa si dimensiunea dreptunghiului de coliziune in starea de atac
+        attackBounds.x = 8;
+        attackBounds.y = 8;
+        attackBounds.width = 48;
+        attackBounds.height = 48;
 
+        // Movement and animation
         animation = new HeroAnimation();
-
         nextPos = new Rectangle(0, 0, normalBounds.width, normalBounds.height);
+
+        // Parameters of the hero
+        life = 5;                           // Viata initiala a inamicului
+        attackRange = 15;                   // Range-ul atacului
+        restingTimeAfterAttack = 2 * 60;    // Cat timp trebuie sa se odihneasca eroul dupa ce ataca
+
+        // Auxiliary variables
+        restingTimeCounter = 0;
+        canAttack = true;
+
+        // Health bar
+        healthBar = new Rectangle(0,0,0,0);
+
     }
 
     /*! \fn public static Hero getHeroInstance()
@@ -79,17 +97,35 @@ public class Hero extends Character
     {
             /// Verifica daca a fost apasata o tasta
         GetInput();
+
             /// Daca nu exista coliziuni cu tile-uri si nici cu iteme putem sa updatam pozitia si animatia caracterului
-        if(!WillCollideWithTiles() && !WillCollideWithItems())
+        if(!WillCollideWithTiles() && !WillCollideWithItems() && !WillCollideWithEnemies())
         {
             /// Actualizeaza  pozitia
             Move();
             /// Actualizeaza id-ul animatiei pe care urmeaza sa o "desenam" pe ecran
             animation.setAnimID(setAnimationID());
             /// Actualizeaza imaginile corespunzatoare animatiilor
-            this.image = animation.playAnimation();
+            this.image = animation.playAnimation(refLink);
+
+            /// Daca suntem la mijlocul animatiei de atac si exista coliziune intre atacul eroului si vreun inamic, atunci inamicul e lovit.
+            if(animation.canInflictDamageToEnemies)
+            {
+                checkAndAttackEnemies();
+                animation.canInflictDamageToEnemies = false;
+            }
+
        }
+
+        // Calculam pozitia health bar-ului (trebuie sa ramana mereu deasupra capului eroului)
+        healthBar.x = (int)(GetX() + bounds.x);
+        healthBar.y = (int)(GetY());
+        healthBar.width = GetLife() * bounds.width / 5; //Fiecare viata reprezinta o treime din healthBar
+        healthBar.height = 8;
+
         DoAction();
+        checkDeadEnemies();
+
     }
 
     /*! \fn private void GetInput()
@@ -100,6 +136,16 @@ public class Hero extends Character
             /// Implicit eroul  nu trebuie sa se deplaseze daca nu este apasata o tasta
         xMove = 0;
         yMove = 0;
+
+        if(canAttack == false) // Daca eroul inca nu poate ataca
+        {
+            restingTimeCounter++;
+            if(restingTimeCounter >= restingTimeAfterAttack)
+            {
+                restingTimeCounter = 0;
+                canAttack = true;
+            }
+        }
 
             /// Facem aceste if-uri pentru ca eroul nostru sa aiba aceeasi viteza si pe diagonala (fara if-urile suplimentare, viteza pe diagonala ar fi speed * sqrt(2))
         KeyManager km = refLink.GetKeyManager();
@@ -167,11 +213,13 @@ public class Hero extends Character
             nextPos.y = (int)(y + yMove + bounds.y);
             return;
         }
-        if(km.space && km.spaceReleased == true) //km.spaceReleased == true ne indica faptul ca putem ataca din nou
+
+        if(km.space && canAttack)
         {
             animation.ongoingAttackAnimation = true;
-            km.spaceReleased = false;
+            canAttack = false;
         }
+
     }
 
     /*! \fn public boolean WillCollideWithTiles()
@@ -209,6 +257,19 @@ public class Hero extends Character
         for(Item i : refLink.GetMap().getMapPopulation().getItems())
         {
             if(Collision.CollisionDetection(nextPos, new Rectangle((int)i.GetX() + i.bounds.x, (int)i.GetY() + i.bounds.y, i.bounds.width, i.bounds.height)))
+                return true;
+        }
+        return false;
+    }
+
+    /*! \fn public boolean WillCollideWithEnemies()
+        \brief Verificam daca exista coliziune intre erou si inamici
+     */
+    public boolean WillCollideWithEnemies()
+    {
+        for(Enemy enemy : refLink.GetMap().getMapPopulation().getEnemies())
+        {
+            if(Collision.CollisionDetection(nextPos, new Rectangle((int)enemy.GetX() + enemy.smallerBounds.x, (int)enemy.GetY() + enemy.smallerBounds.y, enemy.smallerBounds.width, enemy.smallerBounds.height)))
                 return true;
         }
         return false;
@@ -295,8 +356,78 @@ public class Hero extends Character
     {
         g.drawImage(image, (int)x, (int)y, width, height, null);
 
+        // Desenam health bar-ul pt fiecare inamic
+        switch(GetLife())
+        {
+            case 5: { g.setColor(new Color(0, 90, 50)); break; }
+            case 4: { g.setColor(new Color(0,250,0)); break; }
+            case 3: { g.setColor(new Color(200, 90, 0)); break; }
+            case 2: { g.setColor(new Color(200,150,0)); break; }
+            case 1: { g.setColor(new Color(150, 20, 20)); break; }
+            default: g.setColor(Color.white);
+        }
+        g.fillRect(healthBar.x, healthBar.y, healthBar.width, healthBar.height);
+
             ///doar pentru debug daca se doreste vizualizarea dreptunghiului de coliziune. Altfel se vor comenta urmatoarele doua linii
         //g.setColor(Color.blue);
         //g.fillRect((int)(x + bounds.x), (int)(y + bounds.y), bounds.width, bounds.height);
     }
+
+    /*! \fn public void setAttackBoundsForHero(Rectangle attackBoundsForHero)
+        \brief In aceasta functie setam attackBounds pt hero. O vom folosi in clasa HeroAnimation pt a "mari" dreptunghiul de coliziune
+        in directia in care ataca eroul.
+
+        \param attackBoundsForHero Dreptunghiul de coliziune al eroului
+     */
+    public void setAttackBoundsForHero(Rectangle attackBoundsForHero)
+    {
+        this.attackBounds.x = attackBoundsForHero.x;
+        this.attackBounds.y = attackBoundsForHero.y;
+        this.attackBounds.width = attackBoundsForHero.width;
+        this.attackBounds.height = attackBoundsForHero.height;
+    }
+
+    /*! \fn public Rectangle getNormalBoundsForHero()
+        \brief Returnam variabila "normalBounds" a eroului
+     */
+    public Rectangle getNormalBoundsForHero() { return normalBounds; }
+
+    /*! \fn public int getAttackRange()
+        \brief Returnam variabila "attackRange" a eroului
+     */
+    public int getAttackRange() { return attackRange; }
+
+    /*! \fn public void checkAndAttackEnemies()
+        \brief In aceasta functie vom verifica daca exista coliziune cu vreun inamic in timpul atacului si, daca da, vom scadea punctele
+        de viata ale inamicului
+     */
+    public void checkAndAttackEnemies()
+    {
+        for(Enemy enemy : refLink.GetMap().getMapPopulation().getEnemies())
+        {
+            if(Collision.CollisionDetection(new Rectangle((int)(this.GetX() + this.attackBounds.x), (int)(this.GetY() + this.attackBounds.y), this.attackBounds.width, this.attackBounds.height), new Rectangle((int)enemy.GetX() + enemy.bounds.x, (int)enemy.GetY() + enemy.bounds.y, enemy.bounds.width, enemy.bounds.height)))
+            {
+                System.out.println("Hit enemy!");
+                enemy.life--;
+                enemy.isStunned = true;
+            }
+
+        }
+    }
+
+    /*! \fn public void checkDeadEnemies()
+        \brief Aceasta functie verifica daca exista inamici morti si, in caz afirmativ, acestia vor fi scosi din lista cu inamici ai scenei curente
+     */
+    public void checkDeadEnemies()
+    {
+        for(Enemy e : refLink.GetMap().getMapPopulation().getEnemies())
+        {
+            if(e.getAnimation().isDead)
+            {
+                e.Die();
+                return;
+            }
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package GreedIsland.Maps;
 
+import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Hero;
 import GreedIsland.Maps.MapPopulation.Map1Scene1Population;
 import GreedIsland.Maps.MapPopulation.MapPopulation;
@@ -10,6 +11,7 @@ import GreedIsland.Tiles.Tile;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.util.ConcurrentModificationException;
 
 /*! \class public class Map
     \brief Implementeaza notiunea de harta a jocului.
@@ -20,7 +22,7 @@ public class Map {
     private MapFactory mapFactory;                      // fabrica de harti
     private MapPopulationFactory mapPopulationFactory;  // fabrica de iteme (obiectele cu care putem interactiona pe fiecare harta)
     private BaseAbstractMap mapTiles;                   // mapTiles va contine tile-urile propriu-zise ale hartii(scenei) curente
-    private MapPopulation mapPopulation;                // mapPopulation va contine toate elementele cu care putem interactiona in scena curenta (inamici?, items, usi etc.)
+    private MapPopulation mapPopulation;                // mapPopulation va contine toate elementele cu care putem interactiona in scena curenta (inamici, items, usi etc.)
 
  // ################################################################################################################ //
 
@@ -43,8 +45,16 @@ public class Map {
     /*! \fn public  void Update()
         \brief Actualizarea hartii in functie de evenimente (un copac a fost taiat)
      */
-    public void Update(){
-
+    public void Update()
+    {
+        try
+        {
+            mapPopulation.updateEnemies();
+        }
+        catch(FileNotFoundException e)
+        {
+            System.out.println("File not found exception - mapPopulation.updateEnemies()");
+        }
     }
 
     /*! \fn public void Draw(Graphics g)
@@ -58,6 +68,8 @@ public class Map {
         drawTiles(g);
             /// Afisam itemele corespunzatoare hartii curente
         mapPopulation.drawItems(g);
+            /// Afisam inamicii din harta curenta
+        mapPopulation.drawEnemies(g);
     }
 
     /*! \fn public void drawTiles(Graphics g)

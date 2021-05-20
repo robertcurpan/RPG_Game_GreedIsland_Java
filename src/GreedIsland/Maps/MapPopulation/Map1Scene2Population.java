@@ -1,10 +1,13 @@
 package GreedIsland.Maps.MapPopulation;
 
+import GreedIsland.Items.ConcreteEnemies.Wolf;
 import GreedIsland.Items.ConcreteItems.Chest;
+import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Item;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 // FACTORY METHOD 2 //
@@ -20,10 +23,15 @@ public class Map1Scene2Population extends MapPopulation
     public Map1Scene2Population(RefLinks refLink)
     {
         items = new ArrayList<Item>();
+        enemies = new ArrayList<Enemy>();
 
-        // Aici vom adauga itemele concrete care se afla in Map1 Scene1 (cea cu casa)
+        // Aici vom adauga itemele concrete care se afla in Map1 Scene2
         Item chest1 = new Chest(refLink, 40, 40, 32, 32);
         items.add(chest1);
+
+        // Aici vom adauga inamicii concreti din Map1 Scene2
+        Enemy enemy1 = new Wolf(refLink, 360, 360);
+        enemies.add(enemy1);
     }
 
     // Metoda "Singleton" de returnare a instantei UNICE (vrem o instanta unica deoarece dorim si un vector unic de Iteme pt fiecare harta).
@@ -53,4 +61,21 @@ public class Map1Scene2Population extends MapPopulation
     {
         return items;
     }
+
+    @Override
+    public void drawEnemies(Graphics g)
+    {
+        for(Enemy e : enemies)
+            e.Draw(g);
+    }
+
+    @Override
+    public void updateEnemies() throws FileNotFoundException
+    {
+        for(Enemy e : enemies)
+            e.Update();
+    }
+
+    @Override
+    public ArrayList<Enemy> getEnemies() { return enemies; }
 }
