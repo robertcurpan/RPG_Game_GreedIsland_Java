@@ -106,6 +106,14 @@ public class Hero extends Character
         return heroInstance;
     }
 
+    /*! \fn public static void resetHero()
+        \brief Setam heroInstance pe null pt a putea fi creata din nou (in alta parte)
+     */
+    public static void resetHero()
+    {
+        heroInstance = null;
+    }
+
     /*! \fn public void Update()
         \brief Actualizeaza pozitia si imaginea eroului.
      */
@@ -142,6 +150,11 @@ public class Hero extends Character
 
         DoAction();
         checkDeadEnemies();
+
+        if(refLink.GetGame().level == 1 && hasTreasureLocation)
+            refLink.GetGame().gameWon = true;
+        if(refLink.GetGame().level == 2 && hasTreasure)
+            refLink.GetGame().gameWon = true;
 
     }
 
@@ -472,5 +485,18 @@ public class Hero extends Character
         \brief Returnam MAX_LIFE.
      */
     public int getMaxLife() { return MAX_LIFE; }
+
+    /*! \fn public boolean isDead()
+        \brief Returneaza true daca eroul este mort (are viata 0)
+     */
+    public boolean isDead()
+    {
+        if(GetLife() == 0)
+        {
+            refLink.GetGame().gameLost = true;
+            return true;
+        }
+        return false;
+    }
 
 }

@@ -25,7 +25,10 @@ public class AboutState extends State {
      */
     @Override
     public void Update(){
-
+        if(refLink.GetKeyManager().m)
+        {
+            State.SetState(refLink.GetGame().getMenuState());
+        }
     }
 
     /*! \fn public void Draw(Graphics g)
@@ -35,6 +38,14 @@ public class AboutState extends State {
      */
     @Override
     public void Draw(Graphics g){
+        g.setFont(new Font("TimesRoman", Font.BOLD, 22));
+        g.setColor(Color.BLACK);
+        g.drawString("DATABASE STATISTICS", 280, 40);
 
+        g.drawString("Level   Score   EnemiesKilled   ChestsCollected   Status", 80, 200);
+        String str = refLink.GetDatabase().getDatabaseInformation();
+        g.drawString(str, 80, 230);
+
+        g.drawString("Return to menu -> press M", 80, 580);
     }
 }

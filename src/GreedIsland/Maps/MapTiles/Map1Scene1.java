@@ -14,24 +14,8 @@ public class Map1Scene1 extends BaseAbstractMap
 
     private Map1Scene1() throws FileNotFoundException
     {
-        Scanner finFront = new Scanner(new FileReader("res/maps/map1scene1frontlayer.txt"));
-        Scanner finBack = new Scanner(new FileReader("res/maps/map1scene1backlayer.txt"));
-
-        // Citim din fisier layerele acestei harti
-        frontLayer = new int[width][height];
-        backLayer = new int[width][height];
-
-        for(int y = 0; y < height; y++)
-        {
-            for(int x = 0; x < width; x++)
-            {
-                backLayer[x][y] = finBack.nextInt();
-                frontLayer[x][y] = finFront.nextInt();
-            }
-        }
-
-        finBack.close();
-        finFront.close();
+        // Citim layerele hartii din fisier (inauntrul functiei avem gestiunea erorilor -> verificam daca id-ul tile-urilor sunt bune)
+        readMapLayersFromFile("map1scene1");
 
         // Stabilim id-ul acestei harti
         mapId = MapNames.map1scene1;

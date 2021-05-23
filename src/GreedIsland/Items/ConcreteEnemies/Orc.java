@@ -30,11 +30,22 @@ public class Orc extends Enemy
         animation = new OrcAnimation();
 
         // Parameters of the "Orc" enemy
-        life = 4;                   // Viata initiala a inamicului
-        SetSpeed(1.2f);             // Viteza inamicului de tip Orc
-        radiusOfSight = 150;        // Specificam raza vizuala a inamicului de tip Orc
-        attackingDistance = 42;     // Specificam attackingDistance -> distanta de la care inamicul isi va incepe animatia de atac si va rani player-ul
-        stunDuration = 60 / 2;      // Cat timp inamicul va fi ametit dupa o lovitura din partea eroului (aici 0.5 secunde)
+        if(refLink.GetGame().level == 1)
+        {
+            life = 4;                   // Viata initiala a inamicului
+            SetSpeed(1.2f);             // Viteza inamicului de tip Orc
+            radiusOfSight = 150;        // Specificam raza vizuala a inamicului de tip Orc
+            attackingDistance = 42;     // Specificam attackingDistance -> distanta de la care inamicul isi va incepe animatia de atac si va rani player-ul
+            stunDuration = 60 / 2;      // Cat timp inamicul va fi ametit dupa o lovitura din partea eroului (aici 0.5 secunde)
+        }
+        if(refLink.GetGame().level == 2)
+        {
+            life = 5;                   // Viata initiala a inamicului
+            SetSpeed(1.4f);             // Viteza inamicului de tip Orc
+            radiusOfSight = 180;        // Specificam raza vizuala a inamicului de tip Orc
+            attackingDistance = 42;     // Specificam attackingDistance -> distanta de la care inamicul isi va incepe animatia de atac si va rani player-ul
+            stunDuration = 60 / 2;      // Cat timp inamicul va fi ametit dupa o lovitura din partea eroului (aici 0.5 secunde)
+        }
 
         // Auxiliary variables
         facingDirection = "Down";   // Specificam facingDirection
@@ -142,7 +153,10 @@ public class Orc extends Enemy
         // Calculam pozitia health bar-ului (trebuie sa ramana mereu deasupra capului eroului)
         healthBar.x = (int)(GetX() + bounds.x);
         healthBar.y = (int)(GetY());
-        healthBar.width = GetLife() * bounds.width / 4; //Fiecare viata reprezinta un sfert din healthBar
+        if(refLink.GetGame().level == 1)
+            healthBar.width = GetLife() * bounds.width / 4; //Fiecare viata reprezinta un sfert din healthBar
+        if(refLink.GetGame().level == 2)
+            healthBar.width = GetLife() * bounds.width / 5; //Fiecare viata reprezinta o cincime din healthBar
         healthBar.height = 8;
 
     }
@@ -153,13 +167,28 @@ public class Orc extends Enemy
         g.drawImage(image, (int)x, (int)y, width, height, null);
 
         // Desenam health bar-ul pt fiecare inamic
-        switch(GetLife())
+        if(refLink.GetGame().level == 1)
         {
-            case 4: { g.setColor(new Color(0, 90, 50)); break; }
-            case 3: { g.setColor(new Color(0, 200, 50)); break;}
-            case 2: { g.setColor(new Color(200, 150, 0)); break; }
-            case 1: { g.setColor(new Color(150, 20, 20)); break; }
-            default: g.setColor(Color.white);
+            switch(GetLife())
+            {
+                case 4: { g.setColor(new Color(0, 90, 50)); break; }
+                case 3: { g.setColor(new Color(0, 200, 50)); break;}
+                case 2: { g.setColor(new Color(200, 150, 0)); break; }
+                case 1: { g.setColor(new Color(150, 20, 20)); break; }
+                default: g.setColor(Color.white);
+            }
+        }
+        if(refLink.GetGame().level == 2)
+        {
+            switch(GetLife())
+            {
+                case 5: { g.setColor(new Color(0,50,40)); break; }
+                case 4: { g.setColor(new Color(0, 90, 50)); break; }
+                case 3: { g.setColor(new Color(0, 200, 50)); break;}
+                case 2: { g.setColor(new Color(200, 150, 0)); break; }
+                case 1: { g.setColor(new Color(150, 20, 20)); break; }
+                default: g.setColor(Color.white);
+            }
         }
         g.fillRect(healthBar.x, healthBar.y, healthBar.width, healthBar.height);
 

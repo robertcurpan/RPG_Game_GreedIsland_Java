@@ -68,8 +68,15 @@ public class Game implements Runnable {
     private State menuState;        // Referinta catre menu
     private State settingsState;    // Referinta catre setari
     private State aboutState;       // Referinta catre about
+    private State winGameState;     // Referinta catre winGame
+    private State loseGameState;    // Referinta catre loseGame
     private KeyManager keyManager;  // Referinta catre obiectul care gestioneaza intrarile din partea utilizatorului
     private RefLinks refLink;       // Referinta catre un obiect a carui sarcina este doar de a retine diverse referinte pentru a fi usor accesibile
+
+    public int level;               // Nivelul care va fi selectat
+    public boolean gameWon;         // Flag care ne spune daca jocul a fost castigat
+    public boolean gameLost;        // Flag care ne spune daca jocul a fost pierdut
+    private Database database;      // Baza de date in care vom scrie o "statistica" a jocului (atunci cand pierdem sau castigam)
 
     /*! \fn public Game(String title, int width, int height)
         \brief Constructor de initializare al clasei Game.
@@ -90,6 +97,10 @@ public class Game implements Runnable {
         runState = false;
             /// Construirea obiectului de gestiune a evenimentelor de tastatura
         keyManager = new KeyManager();
+            /// Initial jocul nu este castigat
+        gameWon = false;
+            /// Initial jocul nu este pierdut
+        gameLost = false;
     }
 
     /*! \fn private void InitGame()
@@ -108,12 +119,18 @@ public class Game implements Runnable {
             /// Se construieste obiectul de tip shortcut ce va retine o serie de referinte catre elementele importante din program.
         refLink = new RefLinks(this);
             /// Definirea starilor programului
-        playState       = new PlayState(refLink);
+        //playState       = new PlayState(refLink);
         menuState       = new MenuState(refLink);
         settingsState   = new SettingsState(refLink);
         aboutState      = new AboutState(refLink);
+        winGameState    = new WinGameState(refLink);
+        loseGameState   = new LoseGameState(refLink);
+
+            /// Cream baza de date
+        database = new Database(refLink);
+
             /// Seteaza starea implicita cu care va fi lansat programul in executie
-        State.SetState(playState);
+        State.SetState(menuState);
     }
 
     /*! \fn public void run()
@@ -217,6 +234,9 @@ public class Game implements Runnable {
                 /// Actualizez starea curenta a jocului, daca exista.
             State.GetState().Update();
         }
+            /// Updatam baza de date (doar atunci cand pierdem sau castigam jocul)
+        if(gameWon || gameLost)
+            database.updateDatabase();
 
     }
 
@@ -296,5 +316,45 @@ public class Game implements Runnable {
         \brief Returnam contextul grafic g
      */
     public Graphics getGraphics() { return g; }
+
+    /*! \fn public State getPlayState()
+        \brief Returnam playState.
+     */
+    public State getPlayState() { return playState; }
+
+    /*! \fn public State getMenuState()
+        \brief Returnam menuState.
+     */
+    public State getMenuState() { return menuState; }
+
+    /*! \fn public State getSettingsState()
+        \brief Returnam settingsState.
+     */
+    public State getSettingsState() { return settingsState; }
+
+    /*! \fn public State getAboutState()
+        \brief Returnam aboutState.
+     */
+    public State getAboutState() { return aboutState; }
+
+    /*! \fn public State getWinGameState()
+        \brief Returnam winGameState.
+     */
+    public State getWinGameState() { return winGameState; }
+
+    /*! \fn public State getLoseGameState()
+        \brief Returnam loseGameState.
+     */
+    public State getLoseGameState() { return loseGameState; }
+
+    /*! \fn public void setPlayState(State newPlayState)
+        \brief Atribuim lui playState referinta newPlayState
+     */
+    public void setPlayState(State newPlayState) { playState = newPlayState; }
+
+    /*! \fn public Database getDatabase()
+        \brief Returnam database
+     */
+    public Database getDatabase() { return database; }
 
 }

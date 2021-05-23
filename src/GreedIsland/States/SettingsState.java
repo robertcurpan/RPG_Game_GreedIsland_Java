@@ -27,7 +27,10 @@ public class SettingsState extends State {
      */
     @Override
     public void Update(){
-
+        if(refLink.GetKeyManager().m)
+        {
+            State.SetState(refLink.GetGame().getMenuState());
+        }
     }
 
     /*! \fn public void Draw(Graphics g)
@@ -37,6 +40,13 @@ public class SettingsState extends State {
      */
     @Override
     public void Draw(Graphics g){
-
+        g.setFont(new Font("TimesRoman", Font.BOLD, 22));
+        g.setColor(Color.BLACK);
+        g.drawString("SETTINGS", 340, 40);
+        g.drawString("W/A/S/D   -> Move up/left/down/right", 80, 200);
+        g.drawString("E              -> Interact with objects (chests, doors)", 80, 230);
+        g.drawString("SPACE     -> Attack", 80, 260);
+        g.drawString("M             -> Return to menu", 80, 290);
+        g.drawString("Return to menu -> press M", 80, 380);
     }
 }

@@ -18,6 +18,13 @@ public class KeyManager implements KeyListener {
     public boolean right;           // Flag pentru tasta "dreapta" apasata.
     public boolean e;               // Flag pentru apasarea tastei "E"
     public boolean space;           // Flag pentru apasarea tastei "Space"
+    public boolean key1;            // Flag pentru apasarea tastei "1"
+    public boolean key2;            // Flag pentru apasarea tastei "2"
+    public boolean m;               // Flag pentru apasarea tastei "m"
+    public boolean l;               // Flag pentru apasarea tastei "l"
+    public boolean s;               // Flag pentru apasarea tastei "s"
+    public boolean a;               // Flag pentru apasarea tastei "a"
+    public boolean esc;             // Flag pentru apasarea tastei "esc"
     public int lastKeyPressed;      // Ultima tasta apasata
     public int lastKeyReleased;     // Ultima tasta eliberata
 
@@ -36,6 +43,13 @@ public class KeyManager implements KeyListener {
         right   = keys[KeyEvent.VK_D];
         e       = keys[KeyEvent.VK_E];
         space   = keys[KeyEvent.VK_SPACE];
+        key1    = keys[KeyEvent.VK_1];
+        key2    = keys[KeyEvent.VK_2];
+        m       = keys[KeyEvent.VK_M];
+        l       = keys[KeyEvent.VK_L];
+        s       = keys[KeyEvent.VK_S];
+        a       = keys[KeyEvent.VK_A];
+        esc     = keys[KeyEvent.VK_ESCAPE];
     }
 
     /*! \fn public void keyPressed(KeyEvent e)

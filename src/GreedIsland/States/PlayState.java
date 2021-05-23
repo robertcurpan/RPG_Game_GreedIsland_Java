@@ -33,7 +33,10 @@ public class PlayState extends State
             /// Referinta catre harta construita este setata si in obiectul shortcut pt a fi accesibila si in alte clase ale programului
         refLink.SetMap(map);
             /// Construieste eroul (folosing o functie specifica Singleton)
-        hero = Hero.getHeroInstance(refLink, 600, 100);
+        if(refLink.GetGame().level == 1)
+            hero = Hero.getHeroInstance(refLink, 600, 100);
+        if(refLink.GetGame().level == 2)
+            hero = Hero.getHeroInstance(refLink, 12*32, 18*32);
     }
 
     /*! \fn public void Update()
@@ -44,6 +47,17 @@ public class PlayState extends State
     {
         map.Update();
         hero.Update();
+
+        // Daca eroul a murit intram in menuState
+        if(Hero.getHeroInstance(refLink, 0, 0).isDead())
+            State.SetState(refLink.GetGame().getLoseGameState());
+
+        // Daca am castigat jocul ne intoarcem in menuState
+        if(refLink.GetGame().gameWon)
+            State.SetState(refLink.GetGame().getWinGameState());
+
+        if(refLink.GetKeyManager().m)
+            State.SetState(refLink.GetGame().getMenuState());
     }
 
     /*! \fn public void Draw(Graphics g)

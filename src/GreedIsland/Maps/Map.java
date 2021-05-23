@@ -50,8 +50,13 @@ public class Map {
         needsToPrintOnScreen = false;
         durationCounter = 0;
         textToBeShownOnScreen = "";
+
             /// Initializam NR_ENEMIES
-        NR_ENEMIES = 14; //21 pt lv 2
+        if(refLink.GetGame().level == 1)
+            NR_ENEMIES = 14;
+        if(refLink.GetGame().level == 2)
+            NR_ENEMIES = 21;
+
             /// Incarca harta de start. Functia poate primi ca argument id-ul hartii ce poate fi incarcat.
         LoadWorld();
     }
@@ -132,10 +137,21 @@ public class Map {
      */
     private void LoadWorld() throws FileNotFoundException
     {
+        if(refLink.GetGame().level == 1)
+        {
             /// Instantiere/returnare mapTiles (cu apel al metodei factory)
-        mapTiles = mapFactory.getMap(MapNames.map2scene1);
+            mapTiles = mapFactory.getMap(MapNames.map1scene7);
             /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
-        mapPopulation = mapPopulationFactory.getMapPopulation(MapNames.map2scene1, refLink);
+            mapPopulation = mapPopulationFactory.getMapPopulation(MapNames.map1scene7, refLink);
+        }
+        if(refLink.GetGame().level == 2)
+        {
+            /// Instantiere/returnare mapTiles (cu apel al metodei factory)
+            mapTiles = mapFactory.getMap(MapNames.map2scene1);
+            /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
+            mapPopulation = mapPopulationFactory.getMapPopulation(MapNames.map2scene1, refLink);
+        }
+
     }
 
 

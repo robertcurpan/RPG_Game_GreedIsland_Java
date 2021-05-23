@@ -30,11 +30,22 @@ public class Skeleton extends Enemy
         animation = new SkeletonAnimation();
 
         // Parameters of the "Wolf" enemy
-        life = 2;                   // Viata initiala a inamicului
-        SetSpeed(1.8f);             // Viteza inamicului de tip Skeleton
-        radiusOfSight = 180;        // Specificam raza vizuala a inamicului de tip Skeleton
-        attackingDistance = 36;     // Specificam attackingDistance -> distanta de la care inamicul isi va incepe animatia de atac si va rani player-ul
-        stunDuration = 60 / 2;      // Cat timp inamicul va fi ametit dupa o lovitura din partea eroului (aici 0.5 secunde)
+        if(refLink.GetGame().level == 1)
+        {
+            life = 2;                   // Viata initiala a inamicului
+            SetSpeed(1.7f);             // Viteza inamicului de tip Skeleton
+            radiusOfSight = 180;        // Specificam raza vizuala a inamicului de tip Skeleton
+            attackingDistance = 36;     // Specificam attackingDistance -> distanta de la care inamicul isi va incepe animatia de atac si va rani player-ul
+            stunDuration = 60 / 2;      // Cat timp inamicul va fi ametit dupa o lovitura din partea eroului (aici 0.5 secunde)
+        }
+        if(refLink.GetGame().level == 2)
+        {
+            life = 3;                   // Viata initiala a inamicului
+            SetSpeed(1.8f);             // Viteza inamicului de tip Skeleton
+            radiusOfSight = 200;        // Specificam raza vizuala a inamicului de tip Skeleton
+            attackingDistance = 36;     // Specificam attackingDistance -> distanta de la care inamicul isi va incepe animatia de atac si va rani player-ul
+            stunDuration = 60 / 2;      // Cat timp inamicul va fi ametit dupa o lovitura din partea eroului (aici 0.5 secunde)
+        }
 
         // Auxiliary variables
         facingDirection = "Down";   // Specificam facingDirection
@@ -142,7 +153,10 @@ public class Skeleton extends Enemy
         // Calculam pozitia health bar-ului (trebuie sa ramana mereu deasupra capului eroului)
         healthBar.x = (int)(GetX() + bounds.x);
         healthBar.y = (int)(GetY());
-        healthBar.width = GetLife() * bounds.width / 2; //Fiecare viata reprezinta o jumatate din healthBar
+        if(refLink.GetGame().level == 1)
+            healthBar.width = GetLife() * bounds.width / 2; //Fiecare viata reprezinta o jumatate din healthBar
+        if(refLink.GetGame().level == 2)
+            healthBar.width = GetLife() * bounds.width / 3; //Fiecare viata reprezinta o treime din healthBar
         healthBar.height = 8;
 
     }
@@ -153,12 +167,26 @@ public class Skeleton extends Enemy
         g.drawImage(image, (int)x, (int)y, width, height, null);
 
         // Desenam health bar-ul pt fiecare inamic
-        switch(GetLife())
+        if(refLink.GetGame().level == 1)
         {
-            case 2: { g.setColor(new Color(0, 90, 50)); break; }
-            case 1: { g.setColor(new Color(150, 20, 20)); break; }
-            default: g.setColor(Color.white);
+            switch(GetLife())
+            {
+                case 2: { g.setColor(new Color(0, 90, 50)); break; }
+                case 1: { g.setColor(new Color(150, 20, 20)); break; }
+                default: g.setColor(Color.white);
+            }
         }
+        if(refLink.GetGame().level == 2)
+        {
+            switch(GetLife())
+            {
+                case 3: { g.setColor(new Color(0,90,50)); break; }
+                case 2: { g.setColor(new Color(200, 150, 0)); break; }
+                case 1: { g.setColor(new Color(150, 20, 20)); break; }
+                default: g.setColor(Color.white);
+            }
+        }
+
         g.fillRect(healthBar.x, healthBar.y, healthBar.width, healthBar.height);
 
         //g.setColor(Color.red);

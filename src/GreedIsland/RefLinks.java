@@ -75,4 +75,9 @@ public class RefLinks {
     {
         this.map = map;
     }
+
+    /*! \fn public Database GetDatabase()
+        \brief Returnam variabila database din game.
+     */
+    public Database GetDatabase() { return this.game.getDatabase(); }
 }
