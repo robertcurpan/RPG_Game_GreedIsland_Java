@@ -71,8 +71,6 @@ public class Game implements Runnable {
     private KeyManager keyManager;  // Referinta catre obiectul care gestioneaza intrarile din partea utilizatorului
     private RefLinks refLink;       // Referinta catre un obiect a carui sarcina este doar de a retine diverse referinte pentru a fi usor accesibile
 
-    private Tile tile;              // Variabila membra temporara. Este folosita in aceasta etapa doar pentru a desena ceva pe ecran.
-
     /*! \fn public Game(String title, int width, int height)
         \brief Constructor de initializare al clasei Game.
 
@@ -293,5 +291,10 @@ public class Game implements Runnable {
     {
         return keyManager;
     }
+
+    /*! \fn public Graphics getGraphics()
+        \brief Returnam contextul grafic g
+     */
+    public Graphics getGraphics() { return g; }
 
 }

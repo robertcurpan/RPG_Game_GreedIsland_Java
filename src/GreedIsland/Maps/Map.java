@@ -1,8 +1,6 @@
 package GreedIsland.Maps;
 
-import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Hero;
-import GreedIsland.Maps.MapPopulation.Map1Scene1Population;
 import GreedIsland.Maps.MapPopulation.MapPopulation;
 import GreedIsland.Maps.MapTiles.BaseAbstractMap;
 import GreedIsland.Maps.MapTiles.MapNames;
@@ -11,7 +9,6 @@ import GreedIsland.Tiles.Tile;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
-import java.util.ConcurrentModificationException;
 
 /*! \class public class Map
     \brief Implementeaza notiunea de harta a jocului.
@@ -21,8 +18,17 @@ public class Map {
 
     private MapFactory mapFactory;                      // fabrica de harti
     private MapPopulationFactory mapPopulationFactory;  // fabrica de iteme (obiectele cu care putem interactiona pe fiecare harta)
+
     private BaseAbstractMap mapTiles;                   // mapTiles va contine tile-urile propriu-zise ale hartii(scenei) curente
     private MapPopulation mapPopulation;                // mapPopulation va contine toate elementele cu care putem interactiona in scena curenta (inamici, items, usi etc.)
+
+    public int NR_ENEMIES;                              // numarul de inamici din nivelul curent (va avea valori diferite pt nivelul 1, respectiv 2)
+    public int score;                                   // scorul jucatorului (colectare chest -> 10 puncte; omorat inamic -> 20 puncte; -> gasit indiciu despre locatia comorii -> 50 puncte
+
+        /// Variables for showing text on screen that indicates the event that happened
+    private boolean needsToPrintOnScreen; /*!< Flag care ne indica faptul ca trebuie sa se afiseze un text pe ecran care sa afiseze actiunea realizata. */
+    private int durationCounter;          /*!< Variabila care contorizeaza timpul cat textul sta afisat pe ecran. */
+    private String textToBeShownOnScreen; /*!< Textul care va fi afisat pe ecran atunci cand se declanseaza o actiune. */
 
  // ################################################################################################################ //
 
@@ -38,6 +44,14 @@ public class Map {
         mapFactory = new MapFactory();
             /// Instantiem mapPopulationFactory
         mapPopulationFactory = new MapPopulationFactory();
+            /// Initializam scorul
+        score = 0;
+            /// Initializam variabilele care ne ajuta sa afisam text pe ecran
+        needsToPrintOnScreen = false;
+        durationCounter = 0;
+        textToBeShownOnScreen = "";
+            /// Initializam NR_ENEMIES
+        NR_ENEMIES = 14; //21 pt lv 2
             /// Incarca harta de start. Functia poate primi ca argument id-ul hartii ce poate fi incarcat.
         LoadWorld();
     }
@@ -70,6 +84,12 @@ public class Map {
         mapPopulation.drawItems(g);
             /// Afisam inamicii din harta curenta
         mapPopulation.drawEnemies(g);
+            /// Afisam un text pe ecran care sa indice evenimentul care tocmai s-a intamplat.
+        g.setFont(new Font("TimesRoman", Font.BOLD, 18));
+        g.setColor(Color.BLACK);
+        showScore(score, 700, 20, g);
+        g.setColor(new Color(50, 10, 0));
+        showTextOnScreen(textToBeShownOnScreen, 3*60, 20, 30, g);
     }
 
     /*! \fn public void drawTiles(Graphics g)
@@ -113,9 +133,9 @@ public class Map {
     private void LoadWorld() throws FileNotFoundException
     {
             /// Instantiere/returnare mapTiles (cu apel al metodei factory)
-        mapTiles = mapFactory.getMap(MapNames.map1scene1);
+        mapTiles = mapFactory.getMap(MapNames.map2scene1);
             /// Instantiere/returnare mapPopulation (cu apel "metoda Singleton")
-        mapPopulation = mapPopulationFactory.getMapPopulation(MapNames.map1scene1, refLink);
+        mapPopulation = mapPopulationFactory.getMapPopulation(MapNames.map2scene1, refLink);
     }
 
 
@@ -184,6 +204,56 @@ public class Map {
 
     }
 
+    public void exitHouse() throws FileNotFoundException
+    {
+        // coliziunea cu usa din interiorul casei si apasarea tastei e langa usa sunt verificate in clasa Hero
+
+        Hero hero = Hero.getHeroInstance(refLink, 0, 0); //x si y nu se vor lua in considerare deoarece eroul este deja creat
+
+        if(mapTiles.getMapExterior() != MapNames.noMap)
+        {
+            // Actualizam mapPopulation (sa corespunda noii harti incarcate)
+            mapPopulation = mapPopulationFactory.getMapPopulation(mapTiles.getMapExterior(), refLink);
+            // Facem tranzitia catre mapa din exteriorul casei
+            mapTiles = mapFactory.getMap(mapTiles.getMapExterior());
+            // Actualizam si pozitia eroului in noua scena (x va fi acelasi)
+            hero.SetY(hero.getExitHousePosY());
+        }
+    }
+
+    public void enterHouse(int idDoor)
+    {
+        // coliziunea cu usa din casei (exterior) si apasarea tastei e langa usa sunt verificate in clasa Hero
+
+        Hero hero = Hero.getHeroInstance(refLink, 0, 0); //x si y nu se vor lua in considerare deoarece eroul este deja creat
+
+        if((idDoor == 61 || (idDoor == 60 && hero.hasKey)) && mapTiles.getMapInterior() != MapNames.noMap) //daca usa e deschisa sau daca usa e inchisa si eroul are cheia
+        {
+            try
+            {
+                // Actualizam pozitia de iesire a eroului din casa (mai exact y-ul)
+                hero.setExitHousePosY((int)hero.GetY() + 35); //un pic mai jos decat locul unde are loc coliziunea cu usa
+                // Actualizam mapPopulation (sa corespunda noii harti incarcate)
+                mapPopulation = mapPopulationFactory.getMapPopulation(mapTiles.getMapInterior(), refLink);
+                // Facem tranzitia catre interiorul casei
+                mapTiles = mapFactory.getMap(mapTiles.getMapInterior());
+                // Actualizam si pozitia eroului in noua scena (x va fi acelasi)
+                hero.SetY(540);
+            }
+            catch(FileNotFoundException ex)
+            {
+                System.out.println("File not found exception!");
+            }
+        }
+        else
+        {
+            if(idDoor == 60 && !hero.hasKey)
+            {
+                setVariablesForPrintingOnScreen(true, "YOU NEED A KEY TO ENTER!");
+            }
+        }
+    }
+
 
     /*! \fn public Tile GetTileBackLayer(int x, int y)
         \brief Intoarce o referinta catre dala aferenta codului din layer-ul din spate al matricii de dale.
@@ -215,6 +285,35 @@ public class Map {
         return t;
     }
 
+    public void setVariablesForPrintingOnScreen(boolean needsToPrintOnScreen, String textToBeShownOnScreen)
+    {
+        this.needsToPrintOnScreen = needsToPrintOnScreen;
+        this.textToBeShownOnScreen = textToBeShownOnScreen;
+    }
+
+    public void showTextOnScreen(String text, int duration, int x, int y, Graphics g)
+    {
+        if(needsToPrintOnScreen)
+        {
+            if(durationCounter < duration)
+            {
+                durationCounter++;
+                g.drawString(text, x, y);
+            }
+            else
+            {
+                durationCounter = 0;
+                needsToPrintOnScreen = false;
+            }
+
+        }
+    }
+
+    public void showScore(int scor, int x, int y, Graphics g)
+    {
+        String text = "Score: " + scor;
+        g.drawString(text, x, y);
+    }
 
 }
 

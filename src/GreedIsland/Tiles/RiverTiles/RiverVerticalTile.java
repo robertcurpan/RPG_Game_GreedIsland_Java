@@ -10,7 +10,7 @@ public class RiverVerticalTile extends Tile
         super(Assets.riverVertical, id);
         /// Setare bounds
         tileBounds.x = 16; tileBounds.y = 0;
-        tileBounds.width = 8; tileBounds.height = 32;
+        tileBounds.width = 8; tileBounds.height = 16;
     }
 
     @Override

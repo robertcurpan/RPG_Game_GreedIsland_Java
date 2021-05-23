@@ -38,10 +38,12 @@ public class Map1Scene1 extends BaseAbstractMap
 
         // Stabilim "vecinii" acestei harti (hartile adiacente in care putem merge)
         // Daca un vecin are valoarea 0 inseamna ca nu exista o harta in acea directie.
-        mapW = MapNames.noMap;
-        mapN = MapNames.noMap;
-        mapE = MapNames.map1scene2; //In dreapta acestei harti se afla Map1Scene2
-        mapS = MapNames.noMap;
+        mapW        = MapNames.map1scene4;
+        mapN        = MapNames.noMap;
+        mapE        = MapNames.map1scene2; //In dreapta acestei harti se afla Map1Scene2
+        mapS        = MapNames.map1scene3;
+        mapInterior = MapNames.map1scene8; //Interiorul casei din aceasta harta
+        mapExterior = MapNames.noMap;
 
     }
 

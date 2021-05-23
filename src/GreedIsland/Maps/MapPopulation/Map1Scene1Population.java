@@ -4,6 +4,7 @@ import GreedIsland.Items.ConcreteEnemies.Orc;
 import GreedIsland.Items.ConcreteEnemies.Skeleton;
 import GreedIsland.Items.ConcreteEnemies.Wolf;
 import GreedIsland.Items.ConcreteItems.Chest;
+import GreedIsland.Items.ConcreteItems.ChestActionType;
 import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Item;
 import GreedIsland.Maps.MapTiles.Map1Scene1;
@@ -29,20 +30,16 @@ public class Map1Scene1Population extends MapPopulation
         enemies = new ArrayList<Enemy>();
 
         // Aici vom adauga itemele concrete care se afla in Map1 Scene1 (cea cu casa) (la inceputul jocului)
-        Item chest1 = new Chest(refLink, 360, 360, 32, 32);
-        Item chest2 = new Chest(refLink, 480,240,32,32);
+        Item chest1 = new Chest(refLink, 520, 580, 32, 32, ChestActionType.giveLife.ordinal());
         items.add(chest1);
-        items.add(chest2);
 
         // Aici vom adauga inamicii concreti care se afla in Map1 Scene1 (la inceputul jocului)
-        Enemy enemy1 = new Wolf(refLink, 400, 400);
-        Enemy enemy2 = new Wolf(refLink, 240, 240);
-        Enemy enemy3 = new Orc(refLink, 640, 300);
-        Enemy enemy4 = new Skeleton(refLink, 700, 480);
+        Enemy enemy1 = new Wolf(refLink, 240, 240);
+        Enemy enemy2 = new Orc(refLink, 640, 300);
+        Enemy enemy3 = new Skeleton(refLink, 700, 480);
         enemies.add(enemy1);
         enemies.add(enemy2);
         enemies.add(enemy3);
-        enemies.add(enemy4);
     }
 
     // Metoda "Singleton" de returnare a instantei UNICE (vrem o instanta unica deoarece dorim si un vector unic de Iteme pt fiecare harta).

@@ -19,7 +19,7 @@ public class OrcAnimation extends Animation
         characterSheet = new SpriteSheetCharacters(ImageLoader.LoadImage("/textures/Enemies_sprites.png"));
 
         // Paramaters of Orc's animation
-        setAnimSpeed((1.5 * Math.pow(10,8)));   // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
+        setAnimSpeed((1 * Math.pow(10,8)));   // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
         restingTimeAfterAttack = 3 * 60 / 2;    // dupa ce ataca, inamicul trebuie sa se odihneasca pt 1.5 secunde pt a putea ataca din nou
 
         // Auxiliary variables
@@ -44,7 +44,7 @@ public class OrcAnimation extends Animation
         if(getAnimID() == AnimationList.orcWalkRight.ordinal())
         {
             // Animatia de mers la dreapta
-            setAnimSpeed((1.5 * Math.pow(10,8)));
+            setAnimSpeed((1 * Math.pow(10,8)));
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la dreapta
             imgPozY = 11;   // frame-urile pt animatia de mers la dreapta se afla pe linia 11
@@ -56,7 +56,7 @@ public class OrcAnimation extends Animation
         if(getAnimID() == AnimationList.orcWalkLeft.ordinal())
         {
             // Animatia de mers la stanga
-            setAnimSpeed((1.5 * Math.pow(10,8)));
+            setAnimSpeed((1 * Math.pow(10,8)));
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la stanga
             imgPozY = 9;   // frame-urile pt animatia de mers la stanga se afla pe linia 9
@@ -68,7 +68,7 @@ public class OrcAnimation extends Animation
         if(getAnimID() == AnimationList.orcWalkUp.ordinal())
         {
             // Animatia de mers la in sus
-            setAnimSpeed((1.5 * Math.pow(10,8)));
+            setAnimSpeed((1 * Math.pow(10,8)));
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in sus
             imgPozY = 8;   // frame-urile pt animatia de mers in sus se afla pe linia 8
@@ -80,7 +80,7 @@ public class OrcAnimation extends Animation
         if(getAnimID() == AnimationList.orcWalkDown.ordinal())
         {
             // Animatia de mers in jos
-            setAnimSpeed((1.5 * Math.pow(10,8)));
+            setAnimSpeed((1 * Math.pow(10,8)));
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in jos
             imgPozY = 10;   // frame-urile pt animatia de mers in jos se afla pe linia 10

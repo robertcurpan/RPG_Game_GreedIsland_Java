@@ -17,7 +17,7 @@ public class HeroAnimation extends Animation
     public HeroAnimation()
     {
         characterSheet = new SpriteSheetCharacters(ImageLoader.LoadImage("/textures/Characters_sprites.png"));
-        setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
+        setAnimSpeed((1 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
         ongoingAttackAnimation = false;
         attackAnimationDuration = 0;
         canInflictDamageToEnemies = false;
@@ -35,7 +35,7 @@ public class HeroAnimation extends Animation
         if(getAnimID() == AnimationList.heroWalkRight.ordinal())
         {
             // Animatia de mers la dreapta
-            setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
+            setAnimSpeed((1 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la dreapta
             imgPozY = 11;   // frame-urile pt animatia de mers la dreapta se afla pe linia 11
@@ -45,7 +45,7 @@ public class HeroAnimation extends Animation
         if(getAnimID() == AnimationList.heroWalkLeft.ordinal())
         {
             // Animatia de mers la stanga
-            setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
+            setAnimSpeed((1 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers la stanga
             imgPozY = 9;   // frame-urile pt animatia de mers la stanga se afla pe linia 9
@@ -55,7 +55,7 @@ public class HeroAnimation extends Animation
         if(getAnimID() == AnimationList.heroWalkUp.ordinal())
         {
             // Animatia de mers la in sus
-            setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
+            setAnimSpeed((1 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in sus
             imgPozY = 8;   // frame-urile pt animatia de mers in sus se afla pe linia 8
@@ -65,7 +65,7 @@ public class HeroAnimation extends Animation
         if(getAnimID() == AnimationList.heroWalkDown.ordinal())
         {
             // Animatia de mers in jos
-            setAnimSpeed((1.5 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
+            setAnimSpeed((1 * Math.pow(10,8)));    // 1.5 * 10^8 nanosecunde = 150 milisecunde (animatia va schimba imaginea la fiecare 150 ms)
             setNrFrames(9);
             imgPozX = 0 + ((int)(System.nanoTime() / getAnimSpeed()) % getNrFrames());  // ciclam printre cele 9 imagini ale animatiei de mers in jos
             imgPozY = 10;   // frame-urile pt animatia de mers in jos se afla pe linia 10

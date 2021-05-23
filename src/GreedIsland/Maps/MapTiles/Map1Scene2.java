@@ -37,11 +37,13 @@ public class Map1Scene2 extends BaseAbstractMap
         mapId = MapNames.map1scene2;
 
         // Stabilim "vecinii" acestei harti (hartile adiacente in care putem merge)
-        // Daca un vecin are valoarea 0 inseamna ca nu exista o harta in acea directie.
-        mapW = MapNames.map1scene1;  // vecinul din stanga al acestei harti este Map1Scene1
-        mapN = MapNames.noMap;
-        mapE = MapNames.noMap;
-        mapS = MapNames.noMap;
+        // Daca un vecin are valoarea "noMap" inseamna ca nu exista o harta in acea directie.
+        mapW        = MapNames.map1scene1;
+        mapN        = MapNames.noMap;
+        mapE        = MapNames.noMap;
+        mapS        = MapNames.noMap;
+        mapInterior = MapNames.noMap;
+        mapExterior = MapNames.noMap;
 
     }
 

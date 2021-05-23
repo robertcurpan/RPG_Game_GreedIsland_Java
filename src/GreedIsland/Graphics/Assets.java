@@ -19,6 +19,8 @@ public class Assets {
         /// Referinte catre elementele grafice (dale) utilizate in joc.
     public static BufferedImage dirt;
     public static BufferedImage grass;
+    public static BufferedImage grassStrands;
+    public static BufferedImage flowers;
     public static BufferedImage grassTall;
     public static BufferedImage treeTall1;
     public static BufferedImage treeTall2;
@@ -36,6 +38,8 @@ public class Assets {
     public static BufferedImage riverHorizontal;
     public static BufferedImage riverNtoE;
     public static BufferedImage riverWtoS;
+    public static BufferedImage riverWtoN;
+    public static BufferedImage riverStoE;
     public static BufferedImage barrel;
     public static BufferedImage roofSmallLight;
     public static BufferedImage roofMediumLight;
@@ -56,6 +60,20 @@ public class Assets {
     public static BufferedImage windowClosed;
     public static BufferedImage windowOpened;
     public static BufferedImage chest;
+        /// Tile-uri pt interiorul casei
+    public static BufferedImage smallDoor;
+    public static BufferedImage wallLeft;
+    public static BufferedImage wallRight;
+    public static BufferedImage wallLeftCorner;
+    public static BufferedImage wallLeftCornerTop;
+    public static BufferedImage wallRightCorner;
+    public static BufferedImage wallRightCornerTop;
+    public static BufferedImage wallFront;
+    public static BufferedImage wallFrontTop;
+    public static BufferedImage wallBack;
+    public static BufferedImage wallBackTop;
+    public static BufferedImage floor;
+    public static BufferedImage empty;
 
  // ################################################################################################## //
 
@@ -78,13 +96,12 @@ public class Assets {
         heroRight = sheetMainCharacters.crop(0, 11);
         heroUp = sheetMainCharacters.crop(0,8);
         heroDown = sheetMainCharacters.crop(0,10);
-            /// Se obtin cateva subimagini corespunzatoare inamicilor concreti (folosite pt setarea imaginii lor in constructor)
-        wolfDown = sheetEnemies.crop(26,10);
-        orcDown = sheetEnemies.crop(0,10);
-        skeletonDown = sheetEnemies.crop(13,10);
+
             /// Se obtin subimaginile corespunzatoare tile-urilor necesare
         dirt = sheetMap1.crop(8,9);
         grass = sheetMap1.crop(4,1);
+        grassStrands = sheetMap1.crop(5,8);
+        flowers = sheetMap1.crop(7,6);
         grassTall = sheetMap1.crop(5,1);
         treeTall1 = sheetMap1.crop(8,6);
         treeTall2 = sheetMap1.crop(8,7);
@@ -102,6 +119,8 @@ public class Assets {
         riverHorizontal = sheetMap1.crop(7,8);
         riverNtoE = sheetMap1.crop(6,9);
         riverWtoS = sheetMap1.crop(5,9);
+        riverWtoN = sheetMap1.crop(7,9);
+        riverStoE = sheetMap1.crop(4,9);
         barrel = sheetMap1.crop(6,1);
         roofSmallLight = sheetMap1.crop(4,2);
         roofMediumLight = sheetMap1.crop(5,2);
@@ -122,5 +141,20 @@ public class Assets {
         windowClosed = sheetMap1.crop(8,0);
         windowOpened = sheetMap1.crop(7,0);
         chest = sheetMap1.crop(7,1);
+            /// Tile-uri pt interiorul casei
+        smallDoor = sheetMap1.crop(1,16);
+        wallLeft = sheetMap1.crop(7,14);
+        wallRight = sheetMap1.crop(17, 14);
+        wallLeftCorner = sheetMap1.crop(7,12);
+        wallLeftCornerTop = sheetMap1.crop(7,11);
+        wallRightCorner = sheetMap1.crop(17,12);
+        wallRightCornerTop = sheetMap1.crop(17,11);
+        wallFront = sheetMap1.crop(10,16);
+        wallFrontTop = sheetMap1.crop(10,15);
+        wallBack = sheetMap1.crop(10,12);
+        wallBackTop = sheetMap1.crop(10,11);
+        floor = sheetMap1.crop(12,17);
+        empty = sheetMap1.crop(4,10);
+
     }
 }

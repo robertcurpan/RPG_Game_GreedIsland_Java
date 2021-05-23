@@ -5,6 +5,7 @@ import GreedIsland.Animations.HeroAnimation;
 import GreedIsland.Collision.Collision;
 import GreedIsland.Graphics.Assets;
 import GreedIsland.Input.KeyManager;
+import GreedIsland.Maps.Map;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
@@ -23,13 +24,22 @@ import java.io.FileNotFoundException;
  */
 public class Hero extends Character
 {
-    private static Hero heroInstance;   // Vom face aceasta clasa sa fie Singleton
-    private BufferedImage image;        /*!< Referinta catre imaginea curenta a eroului.*/
+    private static Hero heroInstance;   /*!< Vom face aceasta clasa sa fie Singleton. */
+    private BufferedImage image;        /*!< Referinta catre imaginea curenta a eroului. */
 
-    private int attackRange;            /*!< Range-ul atacului eroului*/
-    private boolean canAttack;          /*!< Flag care ne indica daca eroul poate ataca din nou (nu am vrea ca eroul sa spammeze atacul */
-    private int restingTimeAfterAttack; /*!< Cat timp trebuie sa se "odihneasca" eroul dupa ce ataca o data */
-    private int restingTimeCounter;     /*!< Contorizam cat timp a trecut de la ultimul atac al eroului */
+    private int attackRange;            /*!< Range-ul atacului eroului. */
+    private boolean canAttack;          /*!< Flag care ne indica daca eroul poate ataca din nou (nu am vrea ca eroul sa spammeze atacul. */
+    private int restingTimeAfterAttack; /*!< Cat timp trebuie sa se "odihneasca" eroul dupa ce ataca o data. */
+    private int restingTimeCounter;     /*!< Contorizam cat timp a trecut de la ultimul atac al eroului. */
+    private int exitHousePosY;          /*!< Pozitia pe axa y unde vom plasa eroul la iesirea dintr-o casa; poz X va fi aceeasi. */
+    private int MAX_LIFE;               /*!< Viata maxima a eroului. Va fi diferita in functie de nivel. */
+
+    public boolean hasKey;              /*!< Flag care ne indica daca eroul detine sau nu cheia pentru a deschide casa cu usi inchise. */
+    public boolean hasTreasureLocation; /*!< Flag care ne indica daca eroul detine indiciul despre locatia comorii. Aceasta este necesara pt incheierea nivelului. */
+    public boolean hasTreasure;         /*!< Flag care ne indica daca eroul a gasit comoara sau nu. */
+    public int nrEnemiesKilled;         /*!< Numarul de inamici omorati de erou. Cand nrEnemiesKilled == NR_ENEMIES, jucatorul va avea posibilitatea de a termina nivelul. */
+    public int nrChestsCollected;       /*!< Numarul de chesturi colectate de erou. */
+
 
  // ################################################################################################# //
 
@@ -66,10 +76,17 @@ public class Hero extends Character
         life = 5;                           // Viata initiala a inamicului
         attackRange = 15;                   // Range-ul atacului
         restingTimeAfterAttack = 2 * 60;    // Cat timp trebuie sa se odihneasca eroul dupa ce ataca
+        nrChestsCollected = 0;              // Numarul de chesturi colectate de erou
+        nrEnemiesKilled = 0;                // Numarul curent de inamici omorati de erou
+        MAX_LIFE = 5;                       // Nr maxim de puncte de viata pe care le poate avea eroul.
 
         // Auxiliary variables
         restingTimeCounter = 0;
         canAttack = true;
+        exitHousePosY = 14*16; //avand in vedere ca nivelul 1 va incepe in interiorul unei case, trebuie sa stim care e pozitia eroului cand iesim din acea casa
+        hasKey = false;
+        hasTreasureLocation = false;
+        hasTreasure = false;
 
         // Health bar
         healthBar = new Rectangle(0,0,0,0);
@@ -235,6 +252,18 @@ public class Hero extends Character
                 if((refLink.GetMap().GetTileBackLayer(i,j).GetId() == 1 && Collision.CollisionDetection(nextPos, new Rectangle(i*32, j*32, 32, 32))))
                 {
                     refLink.GetMap().changeScene();
+                }
+
+                // Verificam daca trebuie sa facem tranzitia catre interiorul casei (daca exista coliziune cu usa casei din exterior si e apasata tasta e)
+                if(refLink.GetKeyManager().e && (refLink.GetMap().GetTileFrontLayer(i,j).GetId() == 61 || refLink.GetMap().GetTileFrontLayer(i,j).GetId() == 60) && Collision.CollisionDetection(nextPos, new Rectangle(i*32, j*32, 32, 32)))
+                {
+                    refLink.GetMap().enterHouse(refLink.GetMap().GetTileFrontLayer(i,j).GetId());
+                }
+
+                // Verificam daca trebuie sa facem tranzitia catre exteriorul casei (daca exista coliziune cu usa casei din interior si e apasata tasta e)
+                if(refLink.GetKeyManager().e && refLink.GetMap().GetTileFrontLayer(i,j).GetId() == 11 && Collision.CollisionDetection(nextPos, new Rectangle(i*32, j*32, 32, 32)))
+                {
+                    refLink.GetMap().exitHouse();
                 }
 
                 // Verificam coliziunea intre urmatoarea pozitie a dreptunghiului de coliziune al eroului si dreptunghiul de coliziune al tile-urilor.
@@ -407,7 +436,6 @@ public class Hero extends Character
         {
             if(Collision.CollisionDetection(new Rectangle((int)(this.GetX() + this.attackBounds.x), (int)(this.GetY() + this.attackBounds.y), this.attackBounds.width, this.attackBounds.height), new Rectangle((int)enemy.GetX() + enemy.bounds.x, (int)enemy.GetY() + enemy.bounds.y, enemy.bounds.width, enemy.bounds.height)))
             {
-                System.out.println("Hit enemy!");
                 enemy.life--;
                 enemy.isStunned = true;
             }
@@ -429,5 +457,20 @@ public class Hero extends Character
             }
         }
     }
+
+    /*! \fn public int getExitHousePosY()
+        \brief Returnam exitHousePosY.
+     */
+    public int getExitHousePosY() { return exitHousePosY; }
+
+    /*! \fn public void setExitHousePosY(int y)
+        \brief Setam exitHousePosY la valoarea parametrului y
+     */
+    public void setExitHousePosY(int y) { exitHousePosY = y; }
+
+    /*! \fn public int getMaxLife()
+        \brief Returnam MAX_LIFE.
+     */
+    public int getMaxLife() { return MAX_LIFE; }
 
 }

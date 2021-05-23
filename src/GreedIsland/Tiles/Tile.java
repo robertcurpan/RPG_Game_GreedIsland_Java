@@ -1,10 +1,8 @@
 package GreedIsland.Tiles;
 
+import GreedIsland.Tiles.HouseInteriorTiles.*;
 import GreedIsland.Tiles.HouseTiles.*;
-import GreedIsland.Tiles.RiverTiles.RiverHorizontalTile;
-import GreedIsland.Tiles.RiverTiles.RiverNtoETile;
-import GreedIsland.Tiles.RiverTiles.RiverVerticalTile;
-import GreedIsland.Tiles.RiverTiles.RiverWtoSTile;
+import GreedIsland.Tiles.RiverTiles.*;
 import GreedIsland.Tiles.RoofTiles.*;
 import GreedIsland.Tiles.TreeTiles.*;
 
@@ -23,6 +21,8 @@ public class Tile {
     public static Tile dirtTile                 = new DirtTile(1);
     public static Tile grassTile                = new GrassTile(2);
     public static Tile grassTallTile            = new GrassTallTile(3);
+    public static Tile grassStrandsTile         = new GrassStrandsTile(6);
+    public static Tile flowersTile              = new FlowersTile(7);
     public static Tile fountainTop              = new FountainTopTile(30);
     public static Tile fountainBottom           = new FountainBottomTile(31);
     public static Tile treeRoundTile1           = new TreeRoundTile1(35);
@@ -35,6 +35,8 @@ public class Tile {
     public static Tile riverHorizontal          = new RiverHorizontalTile(42);
     public static Tile riverNtoE                = new RiverNtoETile(43);
     public static Tile riverWtoS                = new RiverWtoSTile(44);
+    public static Tile riverStoE                = new RiverStoETile(8);
+    public static Tile riverWtoN                = new RiverWtoNTile(9);
     public static Tile waterSplash              = new WaterSplashTile(45);
     public static Tile barrel                   = new BarrelTile(46);
     public static Tile houseStone               = new HouseStoneTile(47);
@@ -55,7 +57,20 @@ public class Tile {
     public static Tile windowClosed             = new WindowClosedTile(62);
     public static Tile windowOpened             = new WindowOpenedTile(63);
     public static Tile torch                    = new TorchTile(64);
-    //TODO de adaugat obiecte grafice (pt desenarea hartii)
+        ///Tile-uri din interiorul casei
+    public static Tile empty                    = new EmptyTile(5);
+    public static Tile floor                    = new FloorTile(10);
+    public static Tile smallDoor                = new SmallDoorTile(11);
+    public static Tile wallBack                 = new WallBackTile(12);
+    public static Tile wallBackTop              = new WallBackTopTile(13);
+    public static Tile wallFront                = new WallFrontTile(14);
+    public static Tile wallFrontTop             = new WallFrontTopTile(15);
+    public static Tile wallLeftCorner           = new WallLeftCornerTile(16);
+    public static Tile wallLeftCornerTop        = new WallLeftCornerTopTile(17);
+    public static Tile wallLeft                 = new WallLeftTile(18);
+    public static Tile wallRight                = new WallRightTile(19);
+    public static Tile wallRightCorner          = new WallRightCornerTile(20);
+    public static Tile wallRightCornerTop       = new WallRightCornerTopTile(21);
 
     public static final int TILE_WIDTH = 32;    // Latimea unei dale in Sprite Sheet
     public static final int TILE_HEIGHT = 32;   // Inaltimea unei dale in Sprite Sheet

@@ -5,6 +5,7 @@ import GreedIsland.Animations.WolfAnimation;
 import GreedIsland.Graphics.Assets;
 import GreedIsland.Items.Enemy;
 import GreedIsland.Items.Hero;
+import GreedIsland.Maps.Map;
 import GreedIsland.RefLinks;
 
 import java.awt.*;
@@ -90,9 +91,10 @@ public class Wolf extends Enemy
         int dist = enemyMovement(); //aici se seteaza xMove si yMove; vom misca inamicul doar daca nu exista coliziuni in directia indicata de xMove si yMove determinate in aceasta functie
 
         // Am adaugat acest if pentru a elimina bug-ul in care inamicul nu se despawneaza daca este in coliziune cu un obiect (si viata e 0)
-        if(life <= 0 && (WillCollideWithTiles() || WillCollideWithItems()))
+        if(life <= 0 && (WillCollideWithTiles() || WillCollideWithItems() || WillCollideWithHero()))
         {
-            bounds.x = -100; bounds.y = -100; //ii mutam hitbox-ul in afara hartii pt a se anula conditia de coliziune si a se putea executa animatia de moarte
+            bounds.x = (int)((Math.random() + 900) * 30); bounds.y = (int)((Math.random() + 900) * 30); //ii mutam hitbox-ul in afara hartii pt a se anula conditia de coliziune si a se putea executa animatia de moarte
+            bounds.width = 0;
         }
 
         if(!WillCollideWithTiles() && !WillCollideWithItems())
@@ -129,7 +131,6 @@ public class Wolf extends Enemy
 
             if(animation.canInflictDamageToHero == true)
             {
-                System.out.println("Attacked hero!"); //simulam scaderea punctelor de viata ale eroului (acest lucru se va intampla aici)
                 Hero.getHeroInstance(refLink, 0, 0).SetLife(Hero.getHeroInstance(refLink, 0, 0).GetLife() - 1);
                 animation.canInflictDamageToHero = false;
             }
@@ -172,7 +173,11 @@ public class Wolf extends Enemy
     @Override
     public void Die()
     {
-        System.out.println("An enemy is dead!");
+        Hero hero = Hero.getHeroInstance(refLink, 0, 0);
+
+        hero.nrEnemiesKilled++;
+        refLink.GetMap().score += 20;
+
         refLink.GetMap().getMapPopulation().getEnemies().remove(this);
     }
 
